@@ -1,5 +1,6 @@
 package huffman.file;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -33,6 +34,16 @@ public class FileRead implements AutoCloseable{
             throw new AssertionError();
         numBitsRem--;
         return (curByte >>> numBitsRem) & 1;
+    }
+    public int read32() throws IOException {
+        int c1 = input.read();
+        int c2 = input.read();
+        int c3 = input.read();
+        int c4 = input.read();
+        if((c1 | c2 | c3 | c4) < 0) {
+            throw new EOFException();
+        }
+        return ((c1 << 24) | (c2 << 16) | (c3 << 8) | c4);
     }
 
     @Override

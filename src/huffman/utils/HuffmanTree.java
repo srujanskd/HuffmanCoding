@@ -1,16 +1,18 @@
 package huffman.utils;
 
+import huffman.file.FileRead;
 import huffman.node.HuffmanNode;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.PriorityQueue;
 
-public class HuffmanTree implements Serializable {
+public class HuffmanTree {
     public final HuffmanNode root;
-    List<List<Integer>> codeList;
+    private List<List<Integer>> codeList;
 
     public HuffmanTree(HuffmanNode root) {
         Objects.requireNonNull(root);
@@ -86,5 +88,20 @@ public class HuffmanTree implements Serializable {
         }
     }
 
+    public int getSymbolFromCodeList(HuffmanNode node, int bit, FileRead inp) throws IOException {
+        if(node == null) {
+            throw new NullPointerException("Code Tree is null");
+        }
+        if(node.isLeafNode()) {
+            return node.getSymbol();
+        }
+        else if(bit == 1) {
 
+            return getSymbolFromCodeList(node.rightNode, inp.read(), inp);
+        }
+        else if(bit == 0) {
+            return getSymbolFromCodeList(node.leftNode, inp.read(), inp);
+        }
+        return -1;
+    }
 }

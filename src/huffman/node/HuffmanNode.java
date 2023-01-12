@@ -10,7 +10,7 @@ import java.io.Serializable;
  *      ->Left Node
  *      ->Right Node
  */
-public class HuffmanNode implements Comparable<HuffmanNode>, Serializable {
+public class HuffmanNode implements Comparable<HuffmanNode> {
     private final int symbol;
     private final int frequency;
     public final HuffmanNode leftNode;

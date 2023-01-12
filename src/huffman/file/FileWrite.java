@@ -33,6 +33,15 @@ public class FileWrite implements AutoCloseable{
             numBitsFilled = 0;
         }
     }
+    public void write32(int val) throws IOException {
+        byte[] bytes = new byte[4];
+
+        bytes[3] = (byte) (val & 0xFF);
+        bytes[2] = (byte) (val >>> 8 & 0xFF);
+        bytes[1] = (byte) (val >>> 16 & 0xFF);
+        bytes[0] = (byte) (val >>> 24 & 0xFF);
+        output.write(bytes);
+    }
     @Override
     public void close() throws Exception {
         while (numBitsFilled != 0)

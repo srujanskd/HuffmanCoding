@@ -15,11 +15,10 @@ import java.util.Objects;
 public class HuffmanCompress implements HuffmanCompressable {
 
     // Compresses input file, stores in output file and stores the Huffman Tree in Key file.
-    public void compressFile(File inputFile, File outputFile, String keyFile) {
+    public void compressFile(File inputFile, File outputFile) {
         try {
             Objects.requireNonNull(inputFile);
             Objects.requireNonNull(outputFile);
-            Objects.requireNonNull(keyFile);
         }
         catch (NullPointerException npe) {
             npe.printStackTrace();
@@ -31,7 +30,7 @@ public class HuffmanCompress implements HuffmanCompressable {
 
         try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile))) {
             try (FileWrite out = new FileWrite(new BufferedOutputStream(new FileOutputStream(outputFile)))) {
-                writeKey(huffTree, keyFile);
+                writeKey(frequencyTable, out);
                 compress(huffTree, in, out);
             }
         } catch (FileNotFoundException e) {
@@ -44,29 +43,16 @@ public class HuffmanCompress implements HuffmanCompressable {
     }
 
     // Serializes and writes the Huffman coded tree into the key file
-    private void writeKey(HuffmanTree codeTree, final String filename) throws IOException {
-        FileOutputStream keyFile = null;
-        ObjectOutputStream out = null;
-        try {
-            keyFile = new FileOutputStream(filename);
-            out = new ObjectOutputStream(keyFile);
-            out.writeObject(codeTree);
-        }
-        finally {
-            if(out != null) {
-                out.close();
-            }
-            if(keyFile != null) {
-                keyFile.close();
-            }
+    private void writeKey(FrequencyTable freqTable, FileWrite output) throws IOException {
+        for(int i = 0; i < 257; i++){
+            int freq = freqTable.get(i);
+            output.write32(freq);
         }
     }
 
     //Reads the input file and compresses each character and writes to the output file
     private void compress(HuffmanTree code, InputStream input, FileWrite out) throws IOException {
-        boolean loop = true;
-
-        while (loop) {
+        while (true) {
             int b = input.read();
             if (b != -1)
                 write(b, code, out);

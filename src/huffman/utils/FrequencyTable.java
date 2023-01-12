@@ -25,15 +25,15 @@ public class FrequencyTable {
     // Returns the frequency of the specified symbol in this frequency table.
     public int get(int symbol) {
         if(symbol < 0 || symbol >= this.frequencies.length)
-            throw new IllegalArgumentException("Symbol should be between the range 0 - " + this.frequencies.length);
+            throw new IllegalArgumentException("Symbol should be between the range 0 - 255");
         return this.frequencies[symbol];
     }
 
     public void set(int symbol, int frequency) {
         if(symbol < 0 || symbol >= this.frequencies.length)
-            throw new IllegalArgumentException("Symbol should be between the range 0 - " + this.frequencies.length);
+            throw new IllegalArgumentException("Symbol should be between the range 0 - 255");
         if(frequency < 0) {
-            new IllegalArgumentException("Negetive frequency is not allowed");
+            throw new IllegalArgumentException("Negetive frequency is not allowed");
         }
         this.frequencies[symbol] = frequency;
     }
