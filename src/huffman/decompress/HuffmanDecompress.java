@@ -36,7 +36,7 @@ public class HuffmanDecompress implements HuffmanDecompressable{
 
     private FrequencyTable readKey(FileRead input) throws IOException {
         FrequencyTable freqTable = new FrequencyTable(new int[257]);
-        for(int i = 0; i < 257; i++) {
+        for(int i = 0; i < freqTable.size(); i++) {
             int freq = input.read32();
             freqTable.set(i, freq);
         }

@@ -39,6 +39,7 @@ public class FrequencyTable {
     }
 
     public int size() {
+
         return this.frequencies.length;
     }
     public void increment(int symbol) {

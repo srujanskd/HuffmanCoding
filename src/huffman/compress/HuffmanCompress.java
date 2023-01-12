@@ -44,7 +44,7 @@ public class HuffmanCompress implements HuffmanCompressable {
 
     // Serializes and writes the Huffman coded tree into the key file
     private void writeKey(FrequencyTable freqTable, FileWrite output) throws IOException {
-        for(int i = 0; i < 257; i++){
+        for(int i = 0; i < freqTable.size(); i++){
             int freq = freqTable.get(i);
             output.write32(freq);
         }
