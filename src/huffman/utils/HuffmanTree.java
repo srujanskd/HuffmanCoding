@@ -87,21 +87,4 @@ public class HuffmanTree {
             prefix.remove(prefix.size() - 1);
         }
     }
-
-    public int getSymbolFromCodeList(HuffmanNode node, int bit, FileRead inp) throws IOException {
-        if(node == null) {
-            throw new NullPointerException("Code Tree is null");
-        }
-        if(node.isLeafNode()) {
-            return node.getSymbol();
-        }
-        else if(bit == 1) {
-
-            return getSymbolFromCodeList(node.rightNode, inp.read(), inp);
-        }
-        else if(bit == 0) {
-            return getSymbolFromCodeList(node.leftNode, inp.read(), inp);
-        }
-        return -1;
-    }
 }
