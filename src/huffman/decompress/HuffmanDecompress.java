@@ -1,13 +1,11 @@
 package huffman.decompress;
 
 import huffman.file.FileRead;
-import huffman.file.FileWrite;
 import huffman.node.HuffmanNode;
 import huffman.utils.FrequencyTable;
 import huffman.utils.HuffmanTree;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class HuffmanDecompress implements HuffmanDecompressable{

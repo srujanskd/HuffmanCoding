@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * Read each character from given input stream
  */
-public class FileRead implements AutoCloseable{
+public class FileRead implements FIleReadable, AutoCloseable{
     private InputStream input;
     private int curByte;
     private int numBitsRem;
