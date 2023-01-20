@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.util.Objects;
 
 // Writes into output stream
-public class FileWrite implements AutoCloseable{
+public class FileWrite implements FileWritable, AutoCloseable{
     private OutputStream output;
 
     private int currentByte;
