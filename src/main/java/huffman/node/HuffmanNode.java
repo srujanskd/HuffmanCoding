@@ -1,7 +1,5 @@
 package huffman.node;
 
-import java.io.Serializable;
-
 /**
  * Represents a Huffman Node
  * Each node contains;
