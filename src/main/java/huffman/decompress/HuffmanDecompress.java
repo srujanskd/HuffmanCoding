@@ -11,13 +11,13 @@ import java.util.Objects;
 public class HuffmanDecompress implements HuffmanDecompressable{
 
     public void decompressFile(File inputFile, File outputFile) {
-        try {
-            Objects.requireNonNull(inputFile);
-            Objects.requireNonNull(outputFile);
-        }
-        catch (NullPointerException npe) {
-            npe.printStackTrace();
-        }
+
+        Objects.requireNonNull(inputFile);
+        Objects.requireNonNull(outputFile);
+
+        if(!inputFile.exists())
+            throw new IllegalArgumentException("Encoded file does not exist");
+
         try (FileRead inp = new FileRead(new BufferedInputStream(new FileInputStream(inputFile))) ){
             try (OutputStream out = new BufferedOutputStream(new FileOutputStream(outputFile))){
                 FrequencyTable frequencyTable = readKey(inp);
@@ -47,27 +47,18 @@ public class HuffmanDecompress implements HuffmanDecompressable{
         while (true) {
             int b = input.read();
             int sym = -1;
-            if(b == -1) break;
-            if(b == 0) {
+            if (b == -1) break;
+            if (b == 0)
                 node = node.leftNode;
-                if(node.isLeafNode()) {
-                    sym = node.getSymbol();
-                    if(sym > 255) break;
-                    if(sym == -1) break;
-
-                    output.write(sym);
-                    node = code.root;
-                }
-            }
-            else if(b == 1) {
+            else if (b == 1)
                 node = node.rightNode;
-                if(node.isLeafNode()) {
-                    sym = node.getSymbol();
-                    if(sym == -1) break;
+            if (node.isLeafNode()) {
+                sym = node.getSymbol();
+                if (sym > 255) break;
+                if (sym == -1) break;
 
-                    output.write(sym);
-                    node = code.root;
-                }
+                output.write(sym);
+                node = code.root;
             }
         }
         output.close();

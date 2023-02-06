@@ -16,12 +16,11 @@ public class HuffmanCompress implements HuffmanCompressable {
 
     // Compresses input file, stores in output file and stores the Huffman Tree in Key file.
     public void compressFile(File inputFile, File outputFile) {
-        try {
-            Objects.requireNonNull(inputFile);
-            Objects.requireNonNull(outputFile);
-        }
-        catch (NullPointerException npe) {
-            npe.printStackTrace();
+
+        Objects.requireNonNull(inputFile);
+        Objects.requireNonNull(outputFile);
+        if(!inputFile.exists()) {
+            throw new IllegalArgumentException("Input file does not exist");
         }
 
         FrequencyTable frequencyTable = FrequencyTable.buildFrequencyTable(inputFile, new FrequencyTable(new int[257]));

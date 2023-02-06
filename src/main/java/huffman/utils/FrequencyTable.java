@@ -15,7 +15,7 @@ public class FrequencyTable {
         }
         if (frequencies.length < 2)
             throw new IllegalArgumentException("At least 2 symbols needed");
-        if(frequencies.length > 256) {
+        if(frequencies.length > 257) {
             throw new IllegalArgumentException("Currently we only support 8bit ASCII characters");
         }
         this.frequencies = frequencies.clone();
