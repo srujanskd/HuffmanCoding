@@ -15,6 +15,9 @@ public class FrequencyTable {
         }
         if (frequencies.length < 2)
             throw new IllegalArgumentException("At least 2 symbols needed");
+        if(frequencies.length > 256) {
+            throw new IllegalArgumentException("Currently we only support 8bit ASCII characters");
+        }
         this.frequencies = frequencies.clone();
         for (int i = 0; i < this.frequencies.length; i++) {
             if (this.frequencies[i] < 0)
@@ -45,10 +48,15 @@ public class FrequencyTable {
     public void increment(int symbol) {
         if(symbol < 0 || symbol >= this.frequencies.length)
             throw new IllegalArgumentException("Symbol should be between the range 0 - " + this.frequencies.length);
+        if(this.frequencies[symbol] == Integer.MAX_VALUE){
+            throw new IllegalArgumentException("Cannot increment since symbol frequency is already at Integer Max value");
+        }
         this.frequencies[symbol] += 1; // increment the frequency of symbol by one
     }
 
     public static FrequencyTable buildFrequencyTable(File input, FrequencyTable freq) {
+        if(!input.exists())
+            throw new IllegalArgumentException("Input file is not present");
         boolean loop = true;
         try(InputStream inp = new BufferedInputStream(new FileInputStream(input))) {
             while(loop) {

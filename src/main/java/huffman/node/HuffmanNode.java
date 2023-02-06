@@ -26,9 +26,16 @@ public class HuffmanNode implements Comparable<HuffmanNode> {
     }
 
     public int getFrequency() {
+        if(this.frequency < 0) {
+            throw new IllegalArgumentException("Frequency cannot be negative");
+        }
         return this.frequency;
     }
     public int getSymbol() {
+        if(this.symbol < 0) {
+            throw new IllegalArgumentException("Illegal Value for symbol");
+        }
+
         return this.symbol;
     }
 
