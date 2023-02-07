@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class FrequencyTableTest {
     FrequencyTable frequencyTable = new FrequencyTable(new int[256]);
@@ -63,15 +65,28 @@ public class FrequencyTableTest {
 
     @Test
     public void whenBuildFrequencyTableIsCalled_thenExpectCorrectFrequencyFromFile() {
-        FrequencyTable freq = new FrequencyTable(new int[256]);
-        File testFile = new File("/home/srujankashyap/Maven_Test/HuffmanCoding/test.txt");
+        FrequencyTable freq = new FrequencyTable(new int[257]);
+        File testFile = new File("freqTest.txt");
+        try {
+            if(testFile.createNewFile()) {
+                FileWriter fw = new FileWriter(testFile);
+                fw.write("Hello");
+                fw.close();
+            }
+            else {
+                System.out.println("File already exists");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         FrequencyTable.buildFrequencyTable(testFile, freq);
         Assert.assertEquals(freq.get(108), 2);
+        testFile.delete();
     }
     @Test(expected = IllegalArgumentException.class)
     public void whenBuildFrequencyTableIsCalled_thenExpectException() {
         FrequencyTable freq = new FrequencyTable(new int[256]);
-        File testFile = new File("/home/srujankashyap/Maven_Test/HuffmanCoding/exception.txt");
+        File testFile = new File("../../../exception.txt");
         FrequencyTable.buildFrequencyTable(testFile, freq);
     }
 }
