@@ -32,12 +32,10 @@ public class HuffmanCompress implements HuffmanCompressable {
                 writeKey(frequencyTable, out);
                 compress(huffTree, in, out);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
-        }
 
+        }
 
     }
 

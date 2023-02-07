@@ -1,5 +1,7 @@
 package huffman.decompress;
 
+import huffman.compress.HuffmanCompress;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
@@ -18,6 +20,19 @@ public class HuffmanDecompressTest {
         File out = new File("output.txt");
         HuffmanDecompress decompress = new HuffmanDecompress();
         decompress.decompressFile(inp, out);
+
+    }
+    @Test
+    public void whenCompressAndDecompressIsCalled_thenBothShouldBeOfSameSize() {
+        File inp = new File("pg100.txt");
+        File out = new File("output.huf");
+        HuffmanCompress compress = new HuffmanCompress();
+        compress.compressFile(inp, out);
+        File input = new File("output.huf");
+        File output = new File("output.txt");
+        HuffmanDecompress decompress = new HuffmanDecompress();
+        decompress.decompressFile(input, output);
+        Assert.assertEquals(inp.length(), output.length());
 
     }
 }
