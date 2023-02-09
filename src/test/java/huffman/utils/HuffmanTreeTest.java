@@ -10,10 +10,6 @@ import java.io.IOException;
 public class HuffmanTreeTest {
 
     @Test
-    public void getCode() {
-    }
-
-    @Test
     public void whenBuildTreeIsCalled_thenTreeShouldBeSame() {
         File input = new File("testFile.txt");
         try {
@@ -34,9 +30,5 @@ public class HuffmanTreeTest {
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(freq);
         Assert.assertEquals(huffTree.root.getFrequency(), 5);
         input.delete();
-    }
-
-    @Test
-    public void buildCodeList() {
     }
 }
