@@ -28,7 +28,31 @@ public class HuffmanTreeTest {
         freq.buildFrequencyTable(input);
 
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(freq);
-        Assert.assertEquals(huffTree.root.getFrequency(), 5);
+        Assert.assertEquals(5, huffTree.root.getFrequency());
+        Assert.assertEquals(72, huffTree.root.leftNode.leftNode.getSymbol());
+        input.delete();
+    }
+
+    @Test
+    public void whenBuildTreeIsCalledWithZeroFreq_thenTreeShouldBeValid() {
+        File input = new File("testFile.txt");
+        try {
+            if(input.createNewFile()) {
+                FileWriter fw = new FileWriter(input);
+                fw.write("");
+                fw.close();
+            }
+            else {
+                System.out.println("File already exists");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        FrequencyTable freq = new FrequencyTable(new int[257]);
+        freq.buildFrequencyTable(input);
+
+        HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(freq);
+        Assert.assertEquals(0, huffTree.root.getFrequency());
         input.delete();
     }
 }

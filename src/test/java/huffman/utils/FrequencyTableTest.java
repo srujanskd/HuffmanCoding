@@ -65,7 +65,6 @@ public class FrequencyTableTest {
 
     @Test
     public void whenBuildFrequencyTableIsCalled_thenExpectCorrectFrequencyFromFile() {
-        FrequencyTable freq = new FrequencyTable(new int[257]);
         File testFile = new File("freqTest.txt");
         try {
             if(testFile.createNewFile()) {
@@ -80,12 +79,11 @@ public class FrequencyTableTest {
             throw new RuntimeException(e);
         }
         frequencyTable.buildFrequencyTable(testFile);
-        Assert.assertEquals(freq.get(108), 2);
+        Assert.assertEquals(2, frequencyTable.get(108));
         testFile.delete();
     }
     @Test(expected = IllegalArgumentException.class)
     public void whenBuildFrequencyTableIsCalled_thenExpectException() {
-        FrequencyTable freq = new FrequencyTable(new int[256]);
         File testFile = new File("../../../exception.txt");
         frequencyTable.buildFrequencyTable(testFile);
     }
