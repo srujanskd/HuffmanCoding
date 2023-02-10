@@ -23,8 +23,10 @@ public class HuffmanCompress implements HuffmanCompressable {
             throw new IllegalArgumentException("Input file does not exist");
         }
 
-        FrequencyTable frequencyTable = FrequencyTable.buildFrequencyTable(inputFile, new FrequencyTable(new int[257]));
+        FrequencyTable frequencyTable = new FrequencyTable(new int[257]);
+        frequencyTable.buildFrequencyTable(inputFile);
         frequencyTable.increment(256);
+
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyTable);
 
         try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile))) {

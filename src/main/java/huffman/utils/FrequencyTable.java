@@ -3,7 +3,7 @@ package huffman.utils;
 import java.io.*;
 import java.util.Objects;
 
-public class FrequencyTable {
+public class FrequencyTable implements iFrequencyTable {
     private int[] frequencies;
     public FrequencyTable(int[] frequencies){
         try {
@@ -54,7 +54,7 @@ public class FrequencyTable {
         this.frequencies[symbol] += 1; // increment the frequency of symbol by one
     }
 
-    public static FrequencyTable buildFrequencyTable(File input, FrequencyTable freq) {
+    public void buildFrequencyTable(File input) {
         if(!input.exists())
             throw new IllegalArgumentException("Input file is not present");
         boolean loop = true;
@@ -62,7 +62,8 @@ public class FrequencyTable {
             while(loop) {
                 int b = inp.read();
                 if(b != -1) {
-                    freq.increment(b);
+                    increment(b);
+
                 }
                 else if(b == -1) {
                     loop = false;
@@ -73,7 +74,6 @@ public class FrequencyTable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return freq;
     }
 
 }

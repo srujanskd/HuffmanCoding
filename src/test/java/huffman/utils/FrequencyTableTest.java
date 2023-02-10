@@ -79,7 +79,7 @@ public class FrequencyTableTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        FrequencyTable.buildFrequencyTable(testFile, freq);
+        frequencyTable.buildFrequencyTable(testFile);
         Assert.assertEquals(freq.get(108), 2);
         testFile.delete();
     }
@@ -87,6 +87,6 @@ public class FrequencyTableTest {
     public void whenBuildFrequencyTableIsCalled_thenExpectException() {
         FrequencyTable freq = new FrequencyTable(new int[256]);
         File testFile = new File("../../../exception.txt");
-        FrequencyTable.buildFrequencyTable(testFile, freq);
+        frequencyTable.buildFrequencyTable(testFile);
     }
 }
