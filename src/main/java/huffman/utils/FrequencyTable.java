@@ -63,14 +63,11 @@ public class FrequencyTable implements iFrequencyTable {
                 int b = inp.read();
                 if(b != -1) {
                     increment(b);
-
                 }
                 else if(b == -1) {
                     loop = false;
                 }
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }

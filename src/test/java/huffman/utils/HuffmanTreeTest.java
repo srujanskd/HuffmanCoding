@@ -25,7 +25,7 @@ public class HuffmanTreeTest {
             throw new RuntimeException(e);
         }
         FrequencyTable freq = new FrequencyTable(new int[257]);
-        freq = FrequencyTable.buildFrequencyTable(input, freq);
+        freq.buildFrequencyTable(input);
 
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(freq);
         Assert.assertEquals(huffTree.root.getFrequency(), 5);
