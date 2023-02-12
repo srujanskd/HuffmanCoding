@@ -3,56 +3,35 @@ package huffman.utils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class HuffmanTreeTest {
 
     @Test
     public void whenBuildTreeIsCalled_thenTreeShouldBeSame() {
-        File input = new File("testFile.txt");
-        try {
-            if(input.createNewFile()) {
-                FileWriter fw = new FileWriter(input);
-                fw.write("Hello");
-                fw.close();
-            }
-            else {
-                System.out.println("File already exists");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String testString = "Hello";
+        InputStream testStream = new ByteArrayInputStream(testString.getBytes());
         FrequencyTable freq = new FrequencyTable(new int[257]);
-        freq.buildFrequencyTable(input);
+        freq.buildFrequencyTable(testStream);
 
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(freq);
         Assert.assertEquals(5, huffTree.root.getFrequency());
         Assert.assertEquals(72, huffTree.root.leftNode.leftNode.getSymbol());
-        input.delete();
     }
 
     @Test
     public void whenBuildTreeIsCalledWithZeroFreq_thenTreeShouldBeValid() {
-        File input = new File("testFile.txt");
-        try {
-            if(input.createNewFile()) {
-                FileWriter fw = new FileWriter(input);
-                fw.write("");
-                fw.close();
-            }
-            else {
-                System.out.println("File already exists");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String testString = "";
+        InputStream testStream = new ByteArrayInputStream(testString.getBytes());
         FrequencyTable freq = new FrequencyTable(new int[257]);
-        freq.buildFrequencyTable(input);
+        freq.buildFrequencyTable(testStream);
 
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(freq);
         Assert.assertEquals(0, huffTree.root.getFrequency());
-        input.delete();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void whenBuildTreeIsCalledWithNullObj_thenShouldReturnException() {
+        HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(null);
     }
 }

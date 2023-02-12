@@ -3,9 +3,7 @@ package huffman.utils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class FrequencyTableTest {
     FrequencyTable frequencyTable = new FrequencyTable(new int[256]);
@@ -59,32 +57,17 @@ public class FrequencyTableTest {
     public void whenIncrementIsCalled_thenExceptionExpected() {
         frequencyTable.set(91, Integer.MAX_VALUE);
         frequencyTable.increment(91);
-        frequencyTable.increment(-5);
-        frequencyTable.increment(432);
     }
 
     @Test
     public void whenBuildFrequencyTableIsCalled_thenExpectCorrectFrequencyFromFile() {
-        File testFile = new File("freqTest.txt");
-        try {
-            if(testFile.createNewFile()) {
-                FileWriter fw = new FileWriter(testFile);
-                fw.write("Hello");
-                fw.close();
-            }
-            else {
-                System.out.println("File already exists");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        frequencyTable.buildFrequencyTable(testFile);
+        String testString = "Hello";
+        InputStream testStream = new ByteArrayInputStream(testString.getBytes());
+        frequencyTable.buildFrequencyTable(testStream);
         Assert.assertEquals(2, frequencyTable.get(108));
-        testFile.delete();
     }
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void whenBuildFrequencyTableIsCalled_thenExpectException() {
-        File testFile = new File("../../../exception.txt");
-        frequencyTable.buildFrequencyTable(testFile);
+        frequencyTable.buildFrequencyTable(null);
     }
 }

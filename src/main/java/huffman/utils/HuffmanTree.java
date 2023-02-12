@@ -33,6 +33,7 @@ public class HuffmanTree {
     }
 
     public static HuffmanTree buildHuffmanTree(FrequencyTable frequency) {
+        Objects.requireNonNull(frequency);
         PriorityQueue<HuffmanNode> priorityQueue = new PriorityQueue<HuffmanNode>();
         int size = frequency.size();
         for(int i = 0; i < size; i++){
