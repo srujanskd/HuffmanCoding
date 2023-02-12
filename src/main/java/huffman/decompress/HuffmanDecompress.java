@@ -17,6 +17,8 @@ public class HuffmanDecompress implements HuffmanDecompressable{
 
         if(!inputFile.exists())
             throw new IllegalArgumentException("Encoded file does not exist");
+        if(outputFile.exists())
+            throw new IllegalArgumentException("Output file already exists");
 
         try (FileRead inp = new FileRead(new BufferedInputStream(new FileInputStream(inputFile))) ){
             try (OutputStream out = new BufferedOutputStream(new FileOutputStream(outputFile))){
