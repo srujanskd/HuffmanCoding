@@ -42,9 +42,9 @@ public class FrequencyTable implements iFrequencyTable {
     }
 
     public int size() {
-
         return this.frequencies.length;
     }
+
     public void increment(int symbol) {
         if(symbol < 0 || symbol >= this.frequencies.length)
             throw new IllegalArgumentException("Symbol should be between the range 0 - " + this.frequencies.length);
@@ -54,11 +54,10 @@ public class FrequencyTable implements iFrequencyTable {
         this.frequencies[symbol] += 1; // increment the frequency of symbol by one
     }
 
-    public void buildFrequencyTable(File input) {
-        if(!input.exists())
-            throw new IllegalArgumentException("Input file is not present");
+    public void buildFrequencyTable(InputStream input) {
+        Objects.requireNonNull(input);
         boolean loop = true;
-        try(InputStream inp = new BufferedInputStream(new FileInputStream(input))) {
+        try(InputStream inp = new BufferedInputStream(input)) {
             while(loop) {
                 int b = inp.read();
                 if(b != -1) {
@@ -72,5 +71,4 @@ public class FrequencyTable implements iFrequencyTable {
             e.printStackTrace();
         }
     }
-
 }

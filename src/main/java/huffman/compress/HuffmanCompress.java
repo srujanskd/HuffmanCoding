@@ -27,7 +27,13 @@ public class HuffmanCompress implements HuffmanCompressable {
         }
 
         FrequencyTable frequencyTable = new FrequencyTable(new int[257]);
-        frequencyTable.buildFrequencyTable(inputFile);
+        try {
+            InputStream freqInput = new FileInputStream(inputFile);
+            frequencyTable.buildFrequencyTable(freqInput);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
         frequencyTable.increment(256);
 
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyTable);
