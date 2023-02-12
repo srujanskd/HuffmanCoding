@@ -59,8 +59,6 @@ public class FrequencyTableTest {
     public void whenIncrementIsCalled_thenExceptionExpected() {
         frequencyTable.set(91, Integer.MAX_VALUE);
         frequencyTable.increment(91);
-        frequencyTable.increment(-5);
-        frequencyTable.increment(432);
     }
 
     @Test

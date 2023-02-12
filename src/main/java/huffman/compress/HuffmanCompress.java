@@ -22,6 +22,9 @@ public class HuffmanCompress implements HuffmanCompressable {
         if(!inputFile.exists()) {
             throw new IllegalArgumentException("Input file does not exist");
         }
+        if(outputFile.exists()){
+            throw new IllegalArgumentException("Output file already exists, Please provide a new file");
+        }
 
         FrequencyTable frequencyTable = new FrequencyTable(new int[257]);
         frequencyTable.buildFrequencyTable(inputFile);
