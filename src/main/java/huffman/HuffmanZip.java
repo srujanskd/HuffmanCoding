@@ -13,6 +13,7 @@ import java.io.File;
  */
 public class HuffmanZip {
     public static void main(String[] args) {
+        Long starTime = System.currentTimeMillis();
         if(args.length != 3) {
             System.err.println("Usage: java HuffmanZip -compress input_file output_file");
             System.err.println("Usage: java HuffmanZip -decompress input_file output_file");
@@ -31,6 +32,9 @@ public class HuffmanZip {
             HuffmanDecompress huffDecomp = new HuffmanDecompress();
             huffDecomp.decompressFile(inp, out);
         }
+
+        Long endTime = System.currentTimeMillis();
+        System.out.println("Execution time : " + (endTime - starTime) + "ms");
 
     }
 }

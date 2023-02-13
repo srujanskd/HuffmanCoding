@@ -71,6 +71,9 @@ public class HuffmanTree {
     }
 
     public void buildCodeList(HuffmanNode node, List<Integer> prefix) {
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(prefix);
+
         if(node.isLeafNode()) {
             ArrayList<Integer>prefixArrayList =  new ArrayList<>(prefix);
             this.codeList.set(node.getSymbol(), prefixArrayList);

@@ -26,7 +26,6 @@ public class HuffmanDecompress implements HuffmanDecompressable{
                 HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyTable);
                 decompress(huffTree, inp, out);
             }
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -35,6 +34,7 @@ public class HuffmanDecompress implements HuffmanDecompressable{
     }
 
     private FrequencyTable readKey(FileRead input) throws IOException {
+        Objects.requireNonNull(input);
         FrequencyTable freqTable = new FrequencyTable(new int[257]);
         for(int i = 0; i < freqTable.size(); i++) {
             int freq = input.read32();
@@ -44,6 +44,10 @@ public class HuffmanDecompress implements HuffmanDecompressable{
     }
 
     private void decompress(HuffmanTree code, FileRead input, OutputStream output) throws IOException {
+        Objects.requireNonNull(code);
+        Objects.requireNonNull(input);
+        Objects.requireNonNull(output);
+
         HuffmanNode node = code.root;
 
         while (true) {
@@ -56,8 +60,7 @@ public class HuffmanDecompress implements HuffmanDecompressable{
                 node = node.rightNode;
             if (node.isLeafNode()) {
                 sym = node.getSymbol();
-                if (sym > 255) break;
-                if (sym == -1) break;
+                if (sym > 255 || sym == -1) break;
 
                 output.write(sym);
                 node = code.root;

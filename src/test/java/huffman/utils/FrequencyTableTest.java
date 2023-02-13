@@ -19,8 +19,8 @@ public class FrequencyTableTest {
     @Test
     public void whenGetIsCalled_thenSymbolFreqIsExpected() {
         fillFreq();
-        Assert.assertEquals(frequencyTable.get(5), testArr[5]);
-        Assert.assertEquals(frequencyTable.get(255), testArr[255]);
+        Assert.assertEquals(testArr[5], frequencyTable.get(5));
+        Assert.assertEquals(testArr[255], frequencyTable.get(255));
 
     }
 
@@ -50,7 +50,7 @@ public class FrequencyTableTest {
     public void whenIncrementIsCalled_thenOneShouldBeAddedToSymbolFrequency() {
         int freq = frequencyTable.get(78);
         frequencyTable.increment(78);
-        Assert.assertEquals(frequencyTable.get(78), freq + 1);
+        Assert.assertEquals(freq + 1, frequencyTable.get(78));
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -19,21 +19,21 @@ public class HuffmanCompress implements HuffmanCompressable {
 
         Objects.requireNonNull(inputFile);
         Objects.requireNonNull(outputFile);
-        if(!inputFile.exists()) {
+
+        if(!inputFile.exists())
             throw new IllegalArgumentException("Input file does not exist");
-        }
-        if(outputFile.exists()){
+
+        if(outputFile.exists())
             throw new IllegalArgumentException("Output file already exists, Please provide a new file");
-        }
 
         FrequencyTable frequencyTable = new FrequencyTable(new int[257]);
         try {
             InputStream freqInput = new FileInputStream(inputFile);
             frequencyTable.buildFrequencyTable(freqInput);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-
         frequencyTable.increment(256);
 
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyTable);
@@ -43,15 +43,17 @@ public class HuffmanCompress implements HuffmanCompressable {
                 writeKey(frequencyTable, out);
                 compress(huffTree, in, out);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-
         }
-
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Serializes and writes the Huffman coded tree into the key file
     private void writeKey(FrequencyTable freqTable, FileWrite output) throws IOException {
+        Objects.requireNonNull(freqTable);
+        Objects.requireNonNull(output);
+
         for(int i = 0; i < freqTable.size(); i++){
             int freq = freqTable.get(i);
             output.write32(freq);
@@ -60,6 +62,10 @@ public class HuffmanCompress implements HuffmanCompressable {
 
     //Reads the input file and compresses each character and writes to the output file
     private void compress(HuffmanTree code, InputStream input, FileWrite out) throws IOException {
+        Objects.requireNonNull(input);
+        Objects.requireNonNull(out);
+        Objects.requireNonNull(code);
+
         while (true) {
             int b = input.read();
             if (b != -1)
