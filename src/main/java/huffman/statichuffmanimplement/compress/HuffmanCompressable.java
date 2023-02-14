@@ -1,4 +1,4 @@
-package huffman.compress;
+package huffman.statichuffmanimplement.compress;
 
 import java.io.File;
 

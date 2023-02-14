@@ -34,7 +34,7 @@ public class HuffmanTree {
 
     public static HuffmanTree buildHuffmanTree(FrequencyTable frequency) {
         Objects.requireNonNull(frequency);
-        PriorityQueue<HuffmanNode> priorityQueue = new PriorityQueue<HuffmanNode>();
+        PriorityQueue<HuffmanNode> priorityQueue = new PriorityQueue<>();
         int size = frequency.size();
         for(int i = 0; i < size; i++){
             int freq = frequency.get(i);
@@ -57,7 +57,7 @@ public class HuffmanTree {
         while(priorityQueue.size() > 1) {
             HuffmanNode nodeX = priorityQueue.remove();
             HuffmanNode nodeY = priorityQueue.remove();
-            HuffmanNode node = new HuffmanNode(300,
+            HuffmanNode node = new HuffmanNode(Math.min(nodeX.getSymbol(), nodeY.getSymbol()),
                     nodeX.getFrequency() + nodeY.getFrequency(),
                     nodeX, nodeY);
             priorityQueue.add(node);
@@ -68,6 +68,15 @@ public class HuffmanTree {
         List<Integer> prefix = new ArrayList<>();
         huffTree.buildCodeList(rt, prefix);
         return huffTree;
+    }
+    public double averageHuffmanBits(FrequencyTable frequency) {
+        double avg = 0;
+        for(int i = 0; i < frequency.size(); i++) {
+            int freq = frequency.get(i);
+            if(freq != 0)
+                avg += (freq * this.codeList.get(i).size());
+        }
+        return avg / frequency.totalFrequency();
     }
 
     public void buildCodeList(HuffmanNode node, List<Integer> prefix) {

@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.Objects;
 
 public class FrequencyTable implements iFrequencyTable {
-    private int[] frequencies;
+    private final int[] frequencies;
     public FrequencyTable(int[] frequencies){
         try {
             Objects.requireNonNull(frequencies);
@@ -19,8 +19,8 @@ public class FrequencyTable implements iFrequencyTable {
             throw new IllegalArgumentException("Currently we only support 8bit ASCII characters");
         }
         this.frequencies = frequencies.clone();
-        for (int i = 0; i < this.frequencies.length; i++) {
-            if (this.frequencies[i] < 0)
+        for (int frequency : this.frequencies) {
+            if (frequency < 0)
                 throw new IllegalArgumentException("Negative frequency");
         }
     }
@@ -36,7 +36,7 @@ public class FrequencyTable implements iFrequencyTable {
         if(symbol < 0 || symbol >= this.frequencies.length)
             throw new IllegalArgumentException("Symbol should be between the range 0 - 255");
         if(frequency < 0) {
-            throw new IllegalArgumentException("Negetive frequency is not allowed");
+            throw new IllegalArgumentException("Negative frequency is not allowed");
         }
         this.frequencies[symbol] = frequency;
     }
@@ -54,18 +54,24 @@ public class FrequencyTable implements iFrequencyTable {
         this.frequencies[symbol] += 1; // increment the frequency of symbol by one
     }
 
+    public long totalFrequency() {
+        long total = 0;
+        for(int i = 0; i < this.size(); i++) {
+            total += this.get(i);
+        }
+        return total;
+    }
+
     public void buildFrequencyTable(InputStream input) {
         Objects.requireNonNull(input);
         boolean loop = true;
         try(InputStream inp = new BufferedInputStream(input)) {
             while(loop) {
                 int b = inp.read();
-                if(b != -1) {
+                if(b != -1)
                     increment(b);
-                }
-                else if(b == -1) {
+                else
                     loop = false;
-                }
             }
         } catch (IOException e) {
             e.printStackTrace();

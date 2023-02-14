@@ -1,7 +1,7 @@
 package huffman;
 
-import huffman.compress.HuffmanCompress;
-import huffman.decompress.HuffmanDecompress;
+import huffman.statichuffmanimplement.compress.HuffmanCompress;
+import huffman.statichuffmanimplement.decompress.HuffmanDecompress;
 
 import java.io.File;
 

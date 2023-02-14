@@ -1,4 +1,4 @@
-package huffman.decompress;
+package huffman.statichuffmanimplement.decompress;
 
 import huffman.file.FileRead;
 import huffman.node.HuffmanNode;

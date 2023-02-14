@@ -1,6 +1,6 @@
-package huffman.compress;
+package huffman.statichuffmanimplement.compress;
 
-import huffman.decompress.HuffmanDecompress;
+import huffman.statichuffmanimplement.decompress.HuffmanDecompress;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,6 +32,10 @@ public class HuffmanCompressTest {
         HuffmanDecompress decompress = new HuffmanDecompress();
         decompress.decompressFile(input, output);
         Assert.assertEquals(inp.length(), output.length());
+        input.delete();
+        output.delete();
+        inp.delete();
+        out.delete();
 
     }
 

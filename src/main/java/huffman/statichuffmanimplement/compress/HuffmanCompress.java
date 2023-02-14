@@ -1,4 +1,4 @@
-package huffman.compress;
+package huffman.statichuffmanimplement.compress;
 
 import huffman.file.FileWrite;
 import huffman.utils.FrequencyTable;
@@ -47,6 +47,8 @@ public class HuffmanCompress implements HuffmanCompressable {
         catch (Exception e) {
             e.printStackTrace();
         }
+        
+        System.out.println("Average Huffman Bits : "  + huffTree.averageHuffmanBits(frequencyTable));
     }
 
     // Serializes and writes the Huffman coded tree into the key file
