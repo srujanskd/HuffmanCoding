@@ -1,4 +1,4 @@
-package com.compression.huffman.adaptivehuffmanimplement.decompress;
+package com.compression.huffman.adaptive.decompress;
 
 import com.compression.Decompressable;
 import com.compression.file.FileRead;

@@ -1,4 +1,4 @@
-package com.compression.huffman.adaptivehuffmanimplement.compress;
+package com.compression.huffman.adaptive.compress;
 
 import com.compression.Compressable;
 import com.compression.file.FileWrite;

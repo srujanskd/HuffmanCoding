@@ -1,4 +1,4 @@
-package com.compression.huffman.statichuffmanimplement.compress;
+package com.compression.huffman.statichuff.compress;
 
 import com.compression.Compressable;
 import com.compression.huffman.utils.FrequencyTable;
