@@ -1,15 +1,13 @@
 package com.compression.file;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Objects;
 
 /**
  * Read each character from given input stream
  */
 public class FileRead implements FIleReadable, AutoCloseable{
-    private InputStream input;
+    private final InputStream input;
     private int curByte;
     private int numBitsRem;
 
@@ -52,6 +50,11 @@ public class FileRead implements FIleReadable, AutoCloseable{
             return result;
         else
             throw new EOFException();
+    }
+
+    public Object readObj() throws IOException, ClassNotFoundException {
+        ObjectInputStream objectInputStream = new ObjectInputStream(input);
+        return objectInputStream.readObject();
     }
 
     @Override

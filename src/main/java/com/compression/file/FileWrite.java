@@ -1,12 +1,14 @@
 package com.compression.file;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.Objects;
 
 // Writes into output stream
 public class FileWrite implements FileWritable, AutoCloseable{
-    private OutputStream output;
+    private final OutputStream output;
+    ObjectOutputStream objectOutputStream = null;
 
     private int currentByte;
 
@@ -42,11 +44,20 @@ public class FileWrite implements FileWritable, AutoCloseable{
         bytes[0] = (byte) (val >>> 24 & 0xFF);
         output.write(bytes);
     }
+
+    public void writeObject(Object obj) throws IOException {
+        objectOutputStream = new ObjectOutputStream(output);
+        objectOutputStream.writeObject(obj);
+        objectOutputStream.flush();
+
+    }
     @Override
     public void close() throws Exception {
         while (numBitsFilled != 0)
             write(0);
         output.close();
+        if(objectOutputStream != null)
+            objectOutputStream.close();
 
     }
 }

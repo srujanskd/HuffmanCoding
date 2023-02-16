@@ -1,21 +1,18 @@
-package com.compression.huffman.statichuffmanimplement.compress;
+package com.compression.huffman.canonical.compress;
 
 import com.compression.Compressable;
+import com.compression.file.FileWrite;
+import com.compression.huffman.canonical.utils.CanonicalCode;
 import com.compression.huffman.utils.FrequencyTable;
 import com.compression.huffman.utils.HuffmanTree;
-import com.compression.file.FileWrite;
 
 import java.io.*;
-import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-/**
- * Uses Static Huffman Compression algorithm to compress a given file.
- */
-public class HuffmanCompress implements Compressable {
-
-    // Compresses input file, stores in output file and stores the Huffman Tree in Key file.
+public class HuffmanCompress implements Compressable<File> {
+    @Override
     public void compressFile(File inputFile, File outputFile) {
 
         Objects.requireNonNull(inputFile);
@@ -38,33 +35,36 @@ public class HuffmanCompress implements Compressable {
         frequencyTable.increment(256);
 
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyTable);
+        CanonicalCode canonicalCode = new CanonicalCode(huffTree, 257);
+        huffTree = canonicalCode.toCodeTree();
+        List<Integer> prefix = new ArrayList<>();
+        huffTree.buildCodeList(huffTree.root, prefix);
 
         try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile))) {
             try (FileWrite out = new FileWrite(new BufferedOutputStream(new FileOutputStream(outputFile)))) {
-                writeKey(frequencyTable, out);
+                writeKey(out, canonicalCode);
                 compress(huffTree, in, out);
             }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        System.out.println("Average Huffman Bits : "  + huffTree.averageHuffmanBits(frequencyTable));
-    }
-
-    // Serializes and writes the Huffman coded tree into the key file
-    private void writeKey(FrequencyTable freqTable, FileWrite output) throws IOException {
-        Objects.requireNonNull(freqTable);
-        Objects.requireNonNull(output);
-
-        for(int i = 0; i < freqTable.size(); i++){
-            int freq = freqTable.get(i);
-            output.write32(freq);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    //Reads the input file and compresses each character and writes to the output file
-     void compress(HuffmanTree code, InputStream input, FileWrite out) throws IOException {
+    private void writeKey(FileWrite out, CanonicalCode canonCode) throws IOException {
+        for (int i = 0; i < canonCode.getSymbolLimit(); i++) {
+            int val = canonCode.getCodeLength(i);
+            // For this file format, we only support codes up to 255 bits long
+            if (val >= 256)
+                throw new RuntimeException("The code for a symbol is too long");
+
+            // Write value as 8 bits in big endian
+            for (int j = 7; j >= 0; j--)
+                out.write((val >>> j) & 1);
+        }
+
+    }
+
+    void compress(HuffmanTree code, InputStream input, FileWrite out) throws IOException {
         Objects.requireNonNull(input);
         Objects.requireNonNull(out);
         Objects.requireNonNull(code);
@@ -73,7 +73,7 @@ public class HuffmanCompress implements Compressable {
             int b = input.read();
             if (b != -1)
                 write(b, code, out);
-            else if(b == -1) {
+            else {
                 break;
             }
         }

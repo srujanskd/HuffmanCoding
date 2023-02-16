@@ -1,17 +1,11 @@
 package com.compression.huffman;
 
-import com.compression.huffman.statichuff.compress.HuffmanCompress;
-import com.compression.huffman.statichuff.decompress.HuffmanDecompress;
+import com.compression.huffman.adaptive.compress.HuffmanCompress;
+import com.compression.huffman.adaptive.decompress.HuffmanDecompress;
 
 import java.io.File;
 
-/**
- * Main Class for the Application
- * For Compression:
- *  Usage : java HuffmanZip -compress input_file output_file
- *          java HuffmanZip -decompress input_file output_file
- */
-public class HuffmanZip {
+public class AdaptiveZip {
     public static void main(String[] args) {
         Long starTime = System.currentTimeMillis();
         if(args.length != 3) {

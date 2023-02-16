@@ -1,7 +1,7 @@
 package com.compression.huffman;
+import com.compression.huffman.wordhuffman.compress.HuffmanCompress;
+import com.compression.huffman.wordhuffman.decompress.HuffmanDecompress;
 
-import com.compression.huffman.statichuff.compress.HuffmanCompress;
-import com.compression.huffman.statichuff.decompress.HuffmanDecompress;
 
 import java.io.File;
 
@@ -11,7 +11,7 @@ import java.io.File;
  *  Usage : java HuffmanZip -compress input_file output_file
  *          java HuffmanZip -decompress input_file output_file
  */
-public class HuffmanZip {
+public class WordHuffman {
     public static void main(String[] args) {
         Long starTime = System.currentTimeMillis();
         if(args.length != 3) {

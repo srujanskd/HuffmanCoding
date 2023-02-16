@@ -1,6 +1,6 @@
-package com.compression.huffman.statichuffmanimplement.decompress;
+package com.compression.huffman.statichuff.decompress;
 
-import com.compression.huffman.statichuffmanimplement.compress.HuffmanCompress;
+import com.compression.huffman.statichuff.compress.HuffmanCompress;
 import org.junit.Assert;
 import org.junit.Test;
 

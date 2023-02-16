@@ -1,4 +1,4 @@
-package com.compression.huffman.adaptivehuffmanimplement.compress;
+package com.compression.huffman.adaptive.compress;
 
 import com.compression.Compressable;
 import com.compression.file.FileWrite;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class HuffmanCompress implements Compressable {
+public class HuffmanCompress implements Compressable<File> {
     @Override
     public void compressFile(File inputFile, File outputFile) {
         Objects.requireNonNull(inputFile);

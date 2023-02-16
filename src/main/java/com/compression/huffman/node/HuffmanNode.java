@@ -8,14 +8,14 @@ package com.compression.huffman.node;
  *      ->Left Node
  *      ->Right Node
  */
-public class HuffmanNode implements Comparable<HuffmanNode> {
+public class HuffmanNode implements iHuffmanNode<Integer, Integer>, Comparable<HuffmanNode> {
     private final int symbol;
     private final int frequency;
     public final HuffmanNode leftNode;
     public final HuffmanNode rightNode;
 
-    public HuffmanNode(final int symbol,
-                       final int frequency,
+    public HuffmanNode(final Integer symbol,
+                       final Integer frequency,
                        final HuffmanNode leftNode,
                        final HuffmanNode rightNode) {
         this.symbol = symbol;
@@ -25,13 +25,13 @@ public class HuffmanNode implements Comparable<HuffmanNode> {
 
     }
 
-    public int getFrequency() {
+    public Integer getFrequency() {
         if(this.frequency < 0) {
             throw new IllegalArgumentException("Frequency cannot be negative");
         }
         return this.frequency;
     }
-    public int getSymbol() {
+    public Integer getSymbol() {
         if(this.symbol < 0) {
             throw new IllegalArgumentException("Illegal Value for symbol");
         }
@@ -41,10 +41,7 @@ public class HuffmanNode implements Comparable<HuffmanNode> {
 
     //checks weather the current node is leaf node or not
     public boolean isLeafNode() {
-        if(this.leftNode == null && this.rightNode == null) {
-            return true;
-        }
-        return false;
+        return this.leftNode == null && this.rightNode == null;
     }
 
     @Override
