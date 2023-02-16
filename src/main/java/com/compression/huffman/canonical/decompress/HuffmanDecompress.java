@@ -4,13 +4,12 @@ import com.compression.Decompressable;
 import com.compression.file.FileRead;
 import com.compression.huffman.canonical.utils.CanonicalCode;
 import com.compression.huffman.node.HuffmanNode;
-import com.compression.huffman.utils.FrequencyTable;
 import com.compression.huffman.utils.HuffmanTree;
 
 import java.io.*;
 import java.util.Objects;
 
-public class HuffmanDecompress implements Decompressable {
+public class HuffmanDecompress implements Decompressable<File> {
     @Override
     public void decompressFile(File inputFile, File outputFile) {
         Objects.requireNonNull(inputFile);
@@ -27,8 +26,6 @@ public class HuffmanDecompress implements Decompressable {
                 HuffmanTree huffTree = canonicalCode.toCodeTree();
                 decompress(huffTree, inp, out);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

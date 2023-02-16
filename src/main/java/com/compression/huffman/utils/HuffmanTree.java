@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.PriorityQueue;
 
-public class HuffmanTree {
+public class HuffmanTree implements iHuffmanTree<Integer>{
     public final HuffmanNode root;
-    private List<List<Integer>> codeList;
+    private final List<List<Integer>> codeList;
 
     public HuffmanTree(HuffmanNode root) {
         Objects.requireNonNull(root);
@@ -20,7 +20,7 @@ public class HuffmanTree {
             codeList.add(null);
     }
 
-    public ArrayList<Integer> getCode(int symbol) {
+    public ArrayList<Integer> getCode(Integer symbol) {
         if(symbol < 0) {
             throw new IllegalArgumentException("Illegal symbol");
         }

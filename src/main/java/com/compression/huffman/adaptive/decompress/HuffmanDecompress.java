@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class HuffmanDecompress implements Decompressable {
+public class HuffmanDecompress implements Decompressable<File> {
     @Override
     public void decompressFile(File inputFile, File outputFile) {
         Objects.requireNonNull(inputFile);
@@ -25,8 +25,6 @@ public class HuffmanDecompress implements Decompressable {
             try (OutputStream out = new BufferedOutputStream(new FileOutputStream(outputFile))){
                 decompress(inp, out);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
