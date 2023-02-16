@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Objects;
 
 
-    public final class CanonicalCode {
+public final class CanonicalCode {
 
-    private int[] codeLengths;
+    private final int[] codeLengths;
 
     public CanonicalCode(int[] codeLens) {
         // Check basic validity
@@ -59,7 +59,7 @@ import java.util.Objects;
 
     /**
      * Returns the symbol limit for this canonical Huffman code.
-     * Thus this code covers symbol values from 0 to symbolLimit&minus;1.
+     * Thus, this code covers symbol values from 0 to symbolLimit&minus;1.
      * @return the symbol limit, which is at least 2
      */
     public int getSymbolLimit() {
@@ -86,11 +86,11 @@ import java.util.Objects;
      * @return the canonical code tree
      */
     public HuffmanTree toCodeTree() {
-        List<HuffmanNode> nodes = new ArrayList<HuffmanNode>();
+        List<HuffmanNode> nodes = new ArrayList<>();
         for (int i = max(codeLengths); i >= 0; i--) {  // Descend through code lengths
             if (nodes.size() % 2 != 0)
                 throw new AssertionError("Violation of canonical code invariants");
-            List<HuffmanNode> newNodes = new ArrayList<HuffmanNode>();
+            List<HuffmanNode> newNodes = new ArrayList<>();
 
             // Add leaves for symbols with positive code length i
             if (i > 0) {

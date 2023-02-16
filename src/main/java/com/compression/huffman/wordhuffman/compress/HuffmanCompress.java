@@ -67,7 +67,7 @@ public class HuffmanCompress implements Compressable<File> {
                     sb.setLength(0);
                 }
             }
-            else if(b == -1) {
+            else {
                 if(sb.length() > 0)
                     write(sb.toString(), code, out);
                 break;

@@ -7,7 +7,7 @@ import java.io.*;
 
 public class FrequencyTableTest {
     FrequencyTable frequencyTable = new FrequencyTable(new int[256]);
-    int[] testArr = new int[256];
+     final int[] testArr = new int[256];
 
     public void fillFreq() {
         for(int i = 0; i < frequencyTable.size(); i++) {

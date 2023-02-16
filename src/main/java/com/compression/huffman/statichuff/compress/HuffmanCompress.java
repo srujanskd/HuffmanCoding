@@ -6,7 +6,6 @@ import com.compression.huffman.utils.HuffmanTree;
 import com.compression.file.FileWrite;
 
 import java.io.*;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -73,7 +72,7 @@ public class HuffmanCompress implements Compressable<File> {
             int b = input.read();
             if (b != -1)
                 write(b, code, out);
-            else if(b == -1) {
+            else {
                 break;
             }
         }

@@ -73,7 +73,7 @@ public class HuffmanCompress implements Compressable<File> {
             int b = input.read();
             if (b != -1)
                 write(b, code, out);
-            else if(b == -1) {
+            else {
                 break;
             }
         }

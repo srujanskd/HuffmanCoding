@@ -51,7 +51,7 @@ public class HuffmanDecompress implements Decompressable<File> {
 
         while (true) {
             int b = input.read();
-            int sym = -1;
+            int sym;
             if (b == -1) break;
             if (b == 0)
                 node = node.leftNode;
