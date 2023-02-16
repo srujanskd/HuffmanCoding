@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class HuffmanCompress implements Compressable {
+public class HuffmanCompress implements Compressable<File> {
     @Override
     public void compressFile(File inputFile, File outputFile) {
 

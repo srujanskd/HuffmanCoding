@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class HuffmanCompress implements Compressable {
+public class HuffmanCompress implements Compressable<File> {
     @Override
     public void compressFile(File inputFile, File outputFile) {
         Objects.requireNonNull(inputFile);

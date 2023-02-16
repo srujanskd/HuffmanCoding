@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * Uses Static Huffman Compression algorithm to compress a given file.
  */
-public class HuffmanCompress implements Compressable {
+public class HuffmanCompress implements Compressable<File> {
 
     // Compresses input file, stores in output file and stores the Huffman Tree in Key file.
     public void compressFile(File inputFile, File outputFile) {
