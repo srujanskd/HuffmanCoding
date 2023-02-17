@@ -8,13 +8,13 @@ package com.compression.huffman.node;
  *      ->Left Node
  *      ->Right Node
  */
-public class HuffmanNode implements iHuffmanNode<Integer, Integer>, Comparable<HuffmanNode> {
-    private final int symbol;
-    private final int frequency;
+public class HuffmanNode implements iHuffmanNode<Object>, Comparable<HuffmanNode> {
+    private final Object symbol;
+    private final Integer frequency;
     public final HuffmanNode leftNode;
     public final HuffmanNode rightNode;
 
-    public HuffmanNode(final Integer symbol,
+    public HuffmanNode(final Object symbol,
                        final Integer frequency,
                        final HuffmanNode leftNode,
                        final HuffmanNode rightNode) {
@@ -31,9 +31,11 @@ public class HuffmanNode implements iHuffmanNode<Integer, Integer>, Comparable<H
         }
         return this.frequency;
     }
-    public Integer getSymbol() {
-        if(this.symbol < 0) {
-            throw new IllegalArgumentException("Illegal Value for symbol");
+    public Object getSymbol() {
+        if(this.symbol instanceof Integer) {
+            if ((Integer)this.symbol < 0) {
+                throw new IllegalArgumentException("Illegal Value for symbol");
+            }
         }
 
         return this.symbol;
@@ -48,7 +50,11 @@ public class HuffmanNode implements iHuffmanNode<Integer, Integer>, Comparable<H
     public int compareTo(HuffmanNode that) {
         final int comp = Integer.compare(this.frequency, that.frequency);
         if(comp != 0) return comp;
-        else return Integer.compare(this.symbol, that.symbol);
+        else {
+            if(this.symbol instanceof Integer)
+                return Integer.compare((Integer)this.symbol, (Integer)that.symbol);
+            else return ((String)this.symbol).compareTo((String) that.symbol);
+        }
     }
 
 }

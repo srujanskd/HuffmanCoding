@@ -25,12 +25,20 @@ public class WordHuffman {
             File out = new File((args[2]));
             HuffmanCompress huffComp = new HuffmanCompress();
             huffComp.compressFile(inp, out);
+            long inLen = inp.length();
+            long outLen = out.length();
+            System.out.println("Input file size :" + inLen + "Bytes");
+            System.out.println("Compressed file size :" + outLen + "Bytes");
+            System.out.println("Compression Percentage :" + (100 - ((double)outLen / inLen * 100)) + "%");
+
         }
         else if(args[0].equals("-decompress")) {
             File inp = new File(args[1]);
             File out = new File((args[2]));
             HuffmanDecompress huffDecomp = new HuffmanDecompress();
             huffDecomp.decompressFile(inp, out);
+            System.out.println("Input file size :" + inp.length() + "Bytes");
+            System.out.println("Output file size :" + out.length() + "Bytes");
         }
 
         Long endTime = System.currentTimeMillis();

@@ -5,7 +5,7 @@ import com.compression.file.FileRead;
 
 import com.compression.huffman.utils.FrequencyMap;
 import com.compression.huffman.wordhuffman.utils.HuffmanTree;
-import com.compression.huffman.wordhuffman.node.HuffmanNode;
+import com.compression.huffman.node.HuffmanNode;
 
 
 import java.io.*;
@@ -52,7 +52,7 @@ public class HuffmanDecompress implements Decompressable<File> {
             else if (b == 1)
                 node = node.rightNode;
             if (node.isLeafNode()) {
-                sym = node.getSymbol();
+                sym = (String) node.getSymbol();
                 if (sym.equals("256")) break;
                 for(int i = 0; i < sym.length(); i++)
                     output.write(sym.charAt(i));

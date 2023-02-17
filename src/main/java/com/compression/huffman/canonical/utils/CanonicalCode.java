@@ -41,7 +41,7 @@ public final class CanonicalCode {
             buildCodeLengths(node.leftNode, depth + 1);
             buildCodeLengths(node.rightNode, depth + 1);
         } else if (node.isLeafNode()) {
-            int symbol = node.getSymbol();
+            int symbol = (int) node.getSymbol();
             if (symbol >= codeLengths.length)
                 throw new IllegalArgumentException("Symbol exceeds symbol limit");
             // Note: CodeTree already has a checked constraint that disallows a symbol in multiple leaves
@@ -102,7 +102,7 @@ public final class CanonicalCode {
 
             // Merge pairs of nodes from the previous deeper layer
             for (int j = 0; j < nodes.size(); j += 2)
-                newNodes.add(new HuffmanNode(Math.min(nodes.get(j).getSymbol(), nodes.get(j+1).getSymbol()),
+                newNodes.add(new HuffmanNode(Math.min((Integer) nodes.get(j).getSymbol(), (Integer)nodes.get(j+1).getSymbol()),
                         0, nodes.get(j), nodes.get(j + 1)));
             nodes = newNodes;
         }

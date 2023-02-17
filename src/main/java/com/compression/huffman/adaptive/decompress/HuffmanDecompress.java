@@ -65,7 +65,7 @@ public class HuffmanDecompress implements Decompressable<File> {
             else if (b == 1)
                 node = node.rightNode;
             if (node.isLeafNode()) {
-                return node.getSymbol();
+                return (int) node.getSymbol();
             }
         }
         return -1;

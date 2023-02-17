@@ -54,14 +54,6 @@ public class FrequencyTable implements iFrequencyTable<Integer> {
         this.frequencies[symbol] += 1; // increment the frequency of symbol by one
     }
 
-    public long totalFrequency() {
-        long total = 0;
-        for(int i = 0; i < this.size(); i++) {
-            total += this.get(i);
-        }
-        return total;
-    }
-
     public void buildFrequencyTable(InputStream input) {
         Objects.requireNonNull(input);
         boolean loop = true;

@@ -1,7 +1,7 @@
 package com.compression.huffman.wordhuffman.utils;
 
 import com.compression.huffman.utils.FrequencyMap;
-import com.compression.huffman.wordhuffman.node.HuffmanNode;
+import com.compression.huffman.node.HuffmanNode;
 import com.compression.huffman.utils.iHuffmanTree;
 
 import java.util.*;
@@ -45,7 +45,7 @@ public class HuffmanTree implements iHuffmanTree<String>{
             HuffmanNode nodeX = priorityQueue.remove();
             HuffmanNode nodeY = priorityQueue.remove();
 
-            HuffmanNode node = new HuffmanNode(min(nodeX.getSymbol(), nodeY.getSymbol()),
+            HuffmanNode node = new HuffmanNode(min((String) nodeX.getSymbol(), (String) nodeY.getSymbol()),
                     nodeX.getFrequency() + nodeY.getFrequency(),
                     nodeX, nodeY);
             priorityQueue.add(node);
@@ -64,7 +64,7 @@ public class HuffmanTree implements iHuffmanTree<String>{
 
         if(node.isLeafNode()) {
             ArrayList<Integer>prefixArrayList =  new ArrayList<>(prefix);
-            this.codeList.put(node.getSymbol(), prefixArrayList);
+            this.codeList.put((String) node.getSymbol(), prefixArrayList);
         }
         else {
             prefix.add(0);
@@ -77,6 +77,18 @@ public class HuffmanTree implements iHuffmanTree<String>{
         }
     }
 
+    public double averageHuffmanBits(FrequencyMap frequency) {
+        double avg = 0;
+        long totalFreq = 0;
+        for(Map.Entry<String, Integer> i :  frequency.getKeyValues()) {
+            if(i.getValue() != 0) {
+                avg += ((i.getValue() * this.codeList.get(i.getKey()).size())/i.getKey().length());
+                totalFreq += i.getValue();
+            }
+
+        }
+        return avg / totalFreq;
+    }
 
     private static String min(String s1, String s2) {
         int ans = s1.compareTo(s2);

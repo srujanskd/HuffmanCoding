@@ -31,6 +31,7 @@ public class HuffmanCompress implements Compressable<File> {
         }
 
         frequencyMap.increment("256");
+
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyMap);
         try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile))) {
             try (FileWrite out = new FileWrite(new BufferedOutputStream(new FileOutputStream(outputFile)))) {
@@ -41,6 +42,8 @@ public class HuffmanCompress implements Compressable<File> {
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println("Average Huffman Bits : "  + huffTree.averageHuffmanBits(frequencyMap));
 
     }
     private void writeKey(FrequencyMap freqTable, FileWrite output) throws IOException {

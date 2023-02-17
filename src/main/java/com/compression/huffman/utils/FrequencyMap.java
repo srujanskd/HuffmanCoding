@@ -48,15 +48,14 @@ public class FrequencyMap implements iFrequencyTable<String>, Serializable {
         boolean loop = true;
         try(InputStream inp = new BufferedInputStream(input)) {
             while(loop) {
-
                 int b =  inp.read();
                 if(b != -1) {
-
                     Character c = (char) b;
                     if (Character.isLetter(c)) {
                         sb.append(c);
                     } else {
-                        this.increment(sb.toString());
+                        if(sb.toString().length() > 0)
+                            this.increment(sb.toString());
                         this.increment(String.valueOf(c));
                         sb.setLength(0);
                     }
