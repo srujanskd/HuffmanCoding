@@ -5,6 +5,8 @@ import com.compression.file.FileWrite;
 import com.compression.huffman.utils.FrequencyMap;
 import com.compression.huffman.wordhuffman.utils.HuffmanTree;
 import com.compression.huffman.wordhuffman.utils.TopNFrequency;
+import com.compression.huffman.wordhuffman.utils.TopNHelper;
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -31,9 +33,11 @@ public class HuffmanCompress implements Compressable<File> {
         catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-
+        TopNHelper topNHelper = new TopNHelper();
+        double percent = topNHelper.bestTopNFrequency(frequencyMap);
+        System.out.println("Top N percent : " + percent + "%");
         TopNFrequency topNFrequency = new TopNFrequency();
-        frequencyMap.setFrequencyMap((HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, 40.0));
+        frequencyMap.setFrequencyMap((HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, percent));
         frequencyMap.increment("256");
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyMap);
         try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile))) {
@@ -52,7 +56,9 @@ public class HuffmanCompress implements Compressable<File> {
     private void writeKey(FrequencyMap freqTable, FileWrite output) throws IOException {
         Objects.requireNonNull(freqTable);
         Objects.requireNonNull(output);
+        byte[] b = SerializationUtils.serialize(freqTable);
         output.writeObject(freqTable);
+        System.out.println("Header Length : "+(b.length)/1000.0 + "KB");
     }
 
     void compress(HuffmanTree code, InputStream input, FileWrite out) throws IOException {
