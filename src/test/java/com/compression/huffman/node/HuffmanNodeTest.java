@@ -26,7 +26,7 @@ public class HuffmanNodeTest {
 
     @org.junit.Test
     public void whenGetSymbolIsCalled_ThenSymbolShouldMatch() {
-        int nodeSymbol = node.getSymbol();
+        int nodeSymbol = (int) node.getSymbol();
         Assert.assertEquals(nodeSymbol, 65);
         Assert.assertEquals(Optional.ofNullable(leafNode1.getSymbol()), Optional.ofNullable(78));
         Assert.assertEquals(Optional.ofNullable(leafNode2.getSymbol()), Optional.ofNullable(101));

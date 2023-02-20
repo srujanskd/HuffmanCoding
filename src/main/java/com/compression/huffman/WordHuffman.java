@@ -13,6 +13,7 @@ import java.io.File;
  */
 public class WordHuffman {
     public static void main(String[] args) {
+        Runtime runtime = Runtime.getRuntime();
         Long starTime = System.currentTimeMillis();
         if(args.length != 3) {
             System.err.println("Usage: java HuffmanZip -compress input_file output_file");
@@ -43,6 +44,7 @@ public class WordHuffman {
 
         Long endTime = System.currentTimeMillis();
         System.out.println("Execution time : " + (endTime - starTime) + "ms");
-
+//        System.out.println("Total allocated memory : " + runtime.totalMemory() / (1024 * 1024) + "MB");
+        System.out.println("Total memory Used : " + ((runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)) + "MB");
     }
 }

@@ -13,6 +13,7 @@ import java.io.File;
  */
 public class HuffmanZip {
     public static void main(String[] args) {
+        Runtime runtime = Runtime.getRuntime();
         Long starTime = System.currentTimeMillis();
         if(args.length != 3) {
             System.err.println("Usage: java HuffmanZip -compress input_file output_file");
@@ -43,6 +44,8 @@ public class HuffmanZip {
 
         Long endTime = System.currentTimeMillis();
         System.out.println("Execution time : " + (endTime - starTime) + "ms");
+        System.out.println("Total memory Used : " + ((runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)) + "MB");
+
 
     }
 }
