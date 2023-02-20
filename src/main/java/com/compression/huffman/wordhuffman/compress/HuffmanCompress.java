@@ -4,10 +4,11 @@ import com.compression.Compressable;
 import com.compression.file.FileWrite;
 import com.compression.huffman.utils.FrequencyMap;
 import com.compression.huffman.wordhuffman.utils.HuffmanTree;
+import com.compression.huffman.wordhuffman.utils.TopNFrequency;
 
+import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 public class HuffmanCompress implements Compressable<File> {
     @Override
@@ -30,8 +31,9 @@ public class HuffmanCompress implements Compressable<File> {
             throw new RuntimeException(e);
         }
 
+        TopNFrequency topNFrequency = new TopNFrequency();
+        frequencyMap.setFrequencyMap((HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, 40.0));
         frequencyMap.increment("256");
-
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyMap);
         try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile))) {
             try (FileWrite out = new FileWrite(new BufferedOutputStream(new FileOutputStream(outputFile)))) {
@@ -84,10 +86,17 @@ public class HuffmanCompress implements Compressable<File> {
         if(code == null) {
             throw new NullPointerException("Huffman Tree is null");
         }
-
         ArrayList<Integer> bits = (ArrayList<Integer>) code.getCode(symbol);
+
         for(int bit : bits) {
             out.write(bit);
         }
     }
 }
+
+//    Average Huffman Bits : 2.747370720860601
+//        Input file size :10555654Bytes
+//        Compressed file size :4333788Bytes
+//        Compression Percentage :58.94344395903845%
+//        Execution time : 3993ms
+//        Total memory Used : 145MB

@@ -22,7 +22,17 @@ public class HuffmanTree implements iHuffmanTree<String>{
             return codeList.get(symbol);
         }
         else {
-            throw new IllegalArgumentException("Symbol could not be found in CodeList");
+            try {
+                ArrayList<Integer> ans = new ArrayList<>();
+                for (Character c : symbol.toCharArray()) {
+                    ArrayList<Integer> arr = (ArrayList<Integer>) this.getCode(c.toString());
+                    ans.addAll(arr);
+                }
+                return ans;
+            }
+            catch (Exception ex) {
+                throw new IllegalArgumentException("Symbol could not be found in CodeList");
+            }
         }
     }
 
@@ -35,7 +45,7 @@ public class HuffmanTree implements iHuffmanTree<String>{
                 priorityQueue.add(new HuffmanNode(i.getKey(), freq, null, null));
             }
         }
-        String[] extra = new String[] {"$EXTRA1$", "$EXTR21$", "$EXTRA3$"};
+        String[] extra = new String[] {"$$", "$E$", "$E2$"};
         int i = 0;
         while(priorityQueue.size() < 2) {
             priorityQueue.add(new HuffmanNode(extra[i++], 0, null, null));
