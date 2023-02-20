@@ -3,7 +3,8 @@ package com.compression.huffman.utils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 public class FrequencyTableTest {
     FrequencyTable frequencyTable = new FrequencyTable(new int[256]);

@@ -6,9 +6,10 @@ import com.compression.huffman.utils.FrequencyMap;
 import com.compression.huffman.wordhuffman.utils.HuffmanTree;
 import com.compression.huffman.wordhuffman.utils.TopNFrequency;
 
-import java.awt.*;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class HuffmanCompress implements Compressable<File> {
     @Override

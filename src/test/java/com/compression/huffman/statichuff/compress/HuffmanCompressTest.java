@@ -12,7 +12,7 @@ public class HuffmanCompressTest {
     @Test
     public void whenCompressAndDecompressIsCalled_thenBothShouldBeOfSameSize() {
         File inp = new File("test.txt");
-        File out = new File("output.huf");
+        File out = new File("test_out.huf");
         try {
             if(inp.createNewFile()) {
                 FileWriter fw = new FileWriter(inp);
@@ -27,8 +27,8 @@ public class HuffmanCompressTest {
         }
         HuffmanCompress compress = new HuffmanCompress();
         compress.compressFile(inp, out);
-        File input = new File("output.huf");
-        File output = new File("output.txt");
+        File input = new File("test_output.huf");
+        File output = new File("test_output.txt");
         HuffmanDecompress decompress = new HuffmanDecompress();
         decompress.decompressFile(input, output);
         Assert.assertEquals(inp.length(), output.length());

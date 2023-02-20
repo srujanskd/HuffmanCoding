@@ -4,7 +4,10 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class FrequencyMap implements iFrequencyTable<String>, Serializable {
     private static final long serialVersionUID = 1L;
@@ -15,7 +18,7 @@ public class FrequencyMap implements iFrequencyTable<String>, Serializable {
     @Override
     public int get(String symbol) {
         Objects.requireNonNull(symbol);
-        return this.frequencyMap.get(symbol);
+        return this.frequencyMap.getOrDefault(symbol, 0);
     }
     public int size() {
         return this.frequencyMap.size();
@@ -43,6 +46,7 @@ public class FrequencyMap implements iFrequencyTable<String>, Serializable {
 
 
     public void setFrequencyMap(HashMap<String, Integer> hm) {
+        Objects.requireNonNull(hm);
         this.frequencyMap = (Map<String, Integer>) hm.clone();
     }
     @Override

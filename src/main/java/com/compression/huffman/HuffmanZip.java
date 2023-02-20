@@ -45,7 +45,5 @@ public class HuffmanZip {
         Long endTime = System.currentTimeMillis();
         System.out.println("Execution time : " + (endTime - starTime) + "ms");
         System.out.println("Total memory Used : " + ((runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)) + "MB");
-
-
     }
 }

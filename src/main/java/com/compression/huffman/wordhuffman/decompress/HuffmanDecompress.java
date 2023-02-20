@@ -2,11 +2,9 @@ package com.compression.huffman.wordhuffman.decompress;
 
 import com.compression.Decompressable;
 import com.compression.file.FileRead;
-
+import com.compression.huffman.node.HuffmanNode;
 import com.compression.huffman.utils.FrequencyMap;
 import com.compression.huffman.wordhuffman.utils.HuffmanTree;
-import com.compression.huffman.node.HuffmanNode;
-
 
 import java.io.*;
 import java.util.Objects;

@@ -1,6 +1,8 @@
 package com.compression.huffman.utils;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
 public class FrequencyTable implements iFrequencyTable<Integer> {

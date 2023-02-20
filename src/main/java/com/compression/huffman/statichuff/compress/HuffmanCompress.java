@@ -1,9 +1,9 @@
 package com.compression.huffman.statichuff.compress;
 
 import com.compression.Compressable;
+import com.compression.file.FileWrite;
 import com.compression.huffman.utils.FrequencyTable;
 import com.compression.huffman.utils.HuffmanTree;
-import com.compression.file.FileWrite;
 
 import java.io.*;
 import java.util.ArrayList;

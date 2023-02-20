@@ -1,9 +1,9 @@
 package com.compression.huffman.statichuff.decompress;
 
 import com.compression.Decompressable;
-import com.compression.huffman.utils.FrequencyTable;
 import com.compression.file.FileRead;
 import com.compression.huffman.node.HuffmanNode;
+import com.compression.huffman.utils.FrequencyTable;
 import com.compression.huffman.utils.HuffmanTree;
 
 import java.io.*;

@@ -1,7 +1,7 @@
 package com.compression.huffman.wordhuffman.utils;
 
-import com.compression.huffman.utils.FrequencyMap;
 import com.compression.huffman.node.HuffmanNode;
+import com.compression.huffman.utils.FrequencyMap;
 import com.compression.huffman.utils.iHuffmanTree;
 
 import java.util.*;
@@ -92,7 +92,7 @@ public class HuffmanTree implements iHuffmanTree<String>{
         long totalFreq = 0;
         for(Map.Entry<String, Integer> i :  frequency.getKeyValues()) {
             if(i.getValue() != 0) {
-                avg += ((i.getValue() * this.codeList.get(i.getKey()).size())/i.getKey().length());
+                avg += (i.getValue() * this.codeList.get(i.getKey()).size() /i.getKey().length());
                 totalFreq += i.getValue();
             }
 
