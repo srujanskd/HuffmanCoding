@@ -33,8 +33,35 @@ public class HuffmanCompress implements Compressable<File> {
         catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        TopNHelper topNHelper = new TopNHelper();
-        double percent = topNHelper.bestTopNFrequency(frequencyMap);
+        ThreadExtender o1 = new ThreadExtender(0, 25, frequencyMap);
+        ThreadExtender o2 = new ThreadExtender(25, 50, frequencyMap);
+        ThreadExtender o3 = new ThreadExtender(50, 75, frequencyMap);
+        ThreadExtender o4 = new ThreadExtender(75, 100, frequencyMap);
+
+        Thread t1 = new Thread(o1);
+        Thread t2 = new Thread(o2);
+        Thread t3 = new Thread(o3);
+        Thread t4 = new Thread(o4);
+        t1.start();
+
+        t2.start();
+        t3.start();
+        t4.start();
+        try {
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        double percent;
+        ThreadExtender per1 = o1.bestResults[0] < o1.bestResults[0] ? o1: o2;
+        ThreadExtender per2 = o3.bestResults[0] < o4.bestResults[0] ? o1 : o2;
+        percent = per1.bestResults[0] < per2.bestResults[0] ? per1.bestResults[1] : per2.bestResults[1];
+
         System.out.println("Top N percent : " + percent + "%");
         TopNFrequency topNFrequency = new TopNFrequency();
         frequencyMap.setFrequencyMap((HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, percent));

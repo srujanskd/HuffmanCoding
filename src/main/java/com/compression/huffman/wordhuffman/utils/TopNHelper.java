@@ -3,25 +3,28 @@ package com.compression.huffman.wordhuffman.utils;
 import com.compression.huffman.utils.FrequencyMap;
 import org.apache.commons.lang3.SerializationUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TopNHelper {
     private double[] pocket;
-    public double bestTopNFrequency(FrequencyMap frequencyMap) {
+    FrequencyMap frequencyMap;
+    public TopNHelper(FrequencyMap frequencyMap) {
+            this.frequencyMap = frequencyMap;
+    }
+    synchronized public double[] bestTopNFrequency(double start, double end) {
         pocket = new double[2];
-        pocket[0] = (3300000.0);
-        pocket[1] = (20.0);
+        pocket[0] = Integer.MAX_VALUE;
+        pocket[1] = 0;
         double[] currentState;
         currentState = pocket;
         TopNFrequency topNFrequency = new TopNFrequency();
         FrequencyMap tempFreq = new FrequencyMap();
         double temp = 1000;
-        double coolingRate = 0.2;
+        double coolingRate = 0.1;
         while(temp > 1) {
-            double percentage = (100.0 * Math.random());
-            HashMap<String, Integer> hm = (HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, percentage);
+            double percentage = Math.random() * (end - start + 1) + start;
+            HashMap<String, Integer> hm = (HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(this.frequencyMap, percentage);
             tempFreq.setFrequencyMap(hm);
             HuffmanTree huffmanTree = HuffmanTree.buildHuffmanTree(tempFreq);
             double headerLength = calculateHeaderLength(tempFreq);
@@ -36,7 +39,8 @@ public class TopNHelper {
             }
             temp = temp / (1 + coolingRate * temp);
         }
-        return pocket[1];
+        System.out.println(pocket[1]);
+        return pocket;
     }
 
 
@@ -51,11 +55,10 @@ public class TopNHelper {
     private double calculateHeaderLength(FrequencyMap tempFreq) {
         return SerializationUtils.serialize(tempFreq).length;
     }
-    public static double probability(double f1, double f2, double temp) {
+    private static double probability(double f1, double f2, double temp) {
         if (f2 < f1) return 1;
         return Math.exp((f1 - f2) / temp);
     }
-
 }
 
 //    Top N percent : 57.47881258323766%
