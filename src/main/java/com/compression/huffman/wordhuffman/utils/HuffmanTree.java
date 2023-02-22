@@ -6,7 +6,6 @@ import com.compression.huffman.utils.iHuffmanTree;
 
 import java.util.*;
 
-
 public class HuffmanTree implements iHuffmanTree<String>{
 
     public final HuffmanNode root;
@@ -92,12 +91,15 @@ public class HuffmanTree implements iHuffmanTree<String>{
         long totalFreq = 0;
         for(Map.Entry<String, Integer> i :  frequency.getKeyValues()) {
             if(i.getValue() != 0) {
-                avg += (i.getValue() * this.codeList.get(i.getKey()).size() /i.getKey().length());
+                avg += (i.getValue() * this.codeList.get(i.getKey()).size() / (double)i.getKey().length());
                 totalFreq += i.getValue();
             }
 
         }
-        return avg / totalFreq;
+        if(totalFreq != 0)
+            return avg / totalFreq;
+        else
+            return avg;
     }
 
     private static String min(String s1, String s2) {

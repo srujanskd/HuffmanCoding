@@ -67,7 +67,7 @@ public class FileRead implements FIleReadable, AutoCloseable{
         input.close();
         curByte = -1;
         numBitsRem = 0;
-        if(objectInputStream == null)
+        if(objectInputStream != null)
             objectInputStream.close();
     }
 }
