@@ -28,10 +28,14 @@ public class HuffmanCompress implements Compressable<File> {
             throw new IllegalArgumentException("Output file already exists, Please provide a new file");
 
         FrequencyMap frequencyMap = new FrequencyMap();
+//        AsyncFrequencyBuilder aFB = new AsyncFrequencyBuilder();
+
         try {
+//            HashMap<String, Integer> hm = (HashMap<String, Integer>) aFB.asyncFrequencyBuild(inputFile.getPath());
+//            frequencyMap.setFrequencyMap(hm);
             InputStream freqInput = new FileInputStream(inputFile);
             frequencyMap.buildFrequencyTable(freqInput);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 //        TopNHelper tn = new TopNHelper(frequencyMap);
