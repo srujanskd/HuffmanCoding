@@ -4,19 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Temperature {
-    public List<Double> temperatureArray;
-    Temperature(double temperature, double coolingFactor) {
-        this.temperatureArray = new ArrayList<>();
-        while(temperature > 1) {
-            this.temperatureArray.add(temperature);
+    public List<List<Double>> splitArray;
+
+    Temperature(double temperature, double coolingFactor, int split) {
+        splitArray = new ArrayList<>();
+        ArrayList<Double> temperatureArray = new ArrayList<>();
+        while (temperature > 1) {
+            temperatureArray.add(temperature);
             temperature = temperature / (1 + coolingFactor * temperature);
         }
+        splitArray = splitArray(split, temperatureArray);
     }
-    public int[] getStartAndMidIndex() {
-        return new int[] {0, this.temperatureArray.size() / 2};
-    }
-    public int[] getMidAndEndIndex() {
-        int size = this.temperatureArray.size();
-        return new int[] {(size / 2) + 1, size};
+
+    private List<List<Double>> splitArray(int split, ArrayList<Double> arr) {
+        int len = arr.size();
+        int elems = len / split;
+        List<List<Double>> ans = new ArrayList<>();
+        for (int i = 0; i < len; i = i + elems) {
+            if(i + elems <= len) {
+                List<Double> part = arr.subList(i, i + elems);
+                ans.add(part);
+            }
+        }
+        if (len % split != 0){
+            List<Double> part =arr.subList(len - 1, len);
+            ans.add(part);
+        }
+        return ans;
     }
 }
