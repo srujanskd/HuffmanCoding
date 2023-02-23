@@ -6,12 +6,12 @@ import com.compression.huffman.utils.FrequencyMap;
 import com.compression.huffman.wordhuffman.utils.HuffmanTree;
 import com.compression.huffman.wordhuffman.utils.TopNFrequency;
 import com.compression.huffman.wordhuffman.utils.TopNHelper;
-import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.*;
 
 public class HuffmanCompress implements Compressable<File> {
     @Override
@@ -33,8 +33,14 @@ public class HuffmanCompress implements Compressable<File> {
         catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        TopNHelper topNHelper = new TopNHelper();
-        double percent = topNHelper.bestTopNFrequency(frequencyMap);
+
+        //perAndHeadLen will have [percentage, header length]
+
+        double[] perAndHeadLen = getBestPercentAndHeaderLenUsingThreads(frequencyMap);
+
+        double percent = perAndHeadLen[0];
+        System.out.println("Header Length : "+ (perAndHeadLen[1]) / 1000.0 + "KB");
+
         System.out.println("Top N percent : " + percent + "%");
         TopNFrequency topNFrequency = new TopNFrequency();
         frequencyMap.setFrequencyMap((HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, percent));
@@ -53,12 +59,62 @@ public class HuffmanCompress implements Compressable<File> {
         System.out.println("Average Huffman Bits : "  + huffTree.averageHuffmanBits(frequencyMap));
 
     }
+    double[] getBestPercentAndHeaderLenUsingThreads(FrequencyMap frequencyMap) {
+        Temperature temp = new Temperature(10000, 0.2);
+//        ThreadExtender threadExtender1 = new ThreadExtender(0, 50, frequencyMap);
+//        ThreadExtender threadExtender2 = new ThreadExtender(50, 100, frequencyMap);
+
+        int[] startAndMid = temp.getStartAndMidIndex();
+        int[] midAndEnd = temp.getMidAndEndIndex();
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
+        TopNHelper tn = new TopNHelper(frequencyMap);
+        TopNHelper tn2 = new TopNHelper(frequencyMap);
+
+        Future<double[]> ans1 = executor.submit( () ->
+                tn.bestTopNFrequency(startAndMid[0], startAndMid[1], temp.temperatureArray)
+        );
+        Future<double[]> ans2 = executor.submit( () ->
+                tn2.bestTopNFrequency(midAndEnd[0], midAndEnd[1], temp.temperatureArray)
+        );
+        double[] ans = new double[2];
+        try {
+            double[] a = ans1.get();
+            double[] b = ans2.get();
+            if(a[0] < b[0]){
+                ans[0] = a[1];
+                ans[1] = a[2];
+            }
+            else {
+                ans[0] = b[1];
+                ans[0] = b[2];
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        executor.shutdown();
+        return ans;
+
+//        ThreadExtender threadExtender1 = new ThreadExtender(startAndMid[0], startAndMid[1], temp.temperatureArray, frequencyMap);
+//        ThreadExtender threadExtender2 = new ThreadExtender(midAndEnd[0], midAndEnd[1], temp.temperatureArray, frequencyMap);
+//        Thread t1 = new Thread(threadExtender1);
+//        Thread t2 = new Thread(threadExtender2);
+//        t1.start();
+//        t2.start();
+//        try {
+//            t1.join();
+//            t2.join();
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        ThreadExtender per1 = threadExtender1.bestResults[0] < threadExtender2.bestResults[0] ? threadExtender1: threadExtender2;
+//        return new double[] {per1.bestResults[1], per1.bestResults[2]};
+    }
     private void writeKey(FrequencyMap freqTable, FileWrite output) throws IOException {
         Objects.requireNonNull(freqTable);
         Objects.requireNonNull(output);
-        byte[] b = SerializationUtils.serialize(freqTable);
         output.writeObject(freqTable);
-        System.out.println("Header Length : "+(b.length)/1000.0 + "KB");
     }
 
     void compress(HuffmanTree code, InputStream input, FileWrite out) throws IOException {

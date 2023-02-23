@@ -11,6 +11,7 @@ import java.util.Objects;
  */
 public class FileRead implements FIleReadable, AutoCloseable{
     private final InputStream input;
+    ObjectInputStream objectInputStream = null;
     private int curByte;
     private int numBitsRem;
 
@@ -56,8 +57,9 @@ public class FileRead implements FIleReadable, AutoCloseable{
     }
 
     public Object readObj() throws IOException, ClassNotFoundException {
-        ObjectInputStream objectInputStream = new ObjectInputStream(input);
+        objectInputStream = new ObjectInputStream(input);
         return objectInputStream.readObject();
+
     }
 
     @Override
@@ -65,5 +67,7 @@ public class FileRead implements FIleReadable, AutoCloseable{
         input.close();
         curByte = -1;
         numBitsRem = 0;
+        if(objectInputStream != null)
+            objectInputStream.close();
     }
 }
