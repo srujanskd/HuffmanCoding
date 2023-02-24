@@ -51,7 +51,7 @@ public class HuffmanDecompress implements Decompressable<File> {
                 node = node.rightNode;
             if (node.isLeafNode()) {
                 sym = (String) node.getSymbol();
-                if (sym.equals("256")) break;
+                if (sym.equals("~~")) break;
                 for(int i = 0; i < sym.length(); i++)
                     output.write(sym.charAt(i));
                 node = code.root;

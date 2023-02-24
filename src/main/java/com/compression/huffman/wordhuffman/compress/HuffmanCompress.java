@@ -46,13 +46,13 @@ public class HuffmanCompress implements Compressable<File> {
         double[] perAndHeadLen = getBestPercentAndHeaderLenUsingThreads(frequencyMap);
 
         double percent = perAndHeadLen[0];
-
+//
         LOGGER.log(Level.INFO, "Header Length {0} KB",(perAndHeadLen[1]) / 1000.0);
         LOGGER.log(Level.INFO, "Top N percent : {0} %", percent);
-//
+
         TopNFrequency topNFrequency = new TopNFrequency();
         frequencyMap.setFrequencyMap((HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, 20.0));
-        frequencyMap.increment("256");
+        frequencyMap.increment("~~");
 
         HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyMap);
 
@@ -73,7 +73,7 @@ public class HuffmanCompress implements Compressable<File> {
 
     double[] getBestPercentAndHeaderLenUsingThreads(FrequencyMap frequencyMap) {
 
-        Temperature temp = new Temperature(1000, 0.3, 4);
+        Temperature temp = new Temperature(1000, 0.2, 5);
 
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
 
@@ -124,7 +124,7 @@ public class HuffmanCompress implements Compressable<File> {
             int b = input.read();
             if (b != -1) {
                 Character c = (char) b;
-                if (Character.isLetter(c)) {
+                if (Character.isLetterOrDigit(c)) {
                     sb.append(c);
                 } else {
                     if (sb.length() > 0)
@@ -138,7 +138,7 @@ public class HuffmanCompress implements Compressable<File> {
                 break;
             }
         }
-        write("256", code, out);  // EOF
+        write("~~", code, out);  // EOF
     }
 
     // Helper function for writing into output file
