@@ -1,5 +1,6 @@
 package com.compression.file;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -49,6 +50,7 @@ public class FileWrite implements FileWritable, AutoCloseable{
         objectOutputStream = new ObjectOutputStream(output);
         objectOutputStream.writeObject(obj);
         objectOutputStream.flush();
+
 
     }
     @Override

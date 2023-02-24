@@ -1,5 +1,8 @@
 package com.compression.huffman.wordhuffman.compress;
 
+import com.compression.huffman.utils.FrequencyMap;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import java.nio.file.Files;
@@ -19,31 +22,31 @@ public class AsyncFrequencyBuilder {
 
             List<String> items = new ArrayList<>();
             Files.lines(Paths.get(path))
-                    .forEach(line->{
+                    .forEach(line -> {
                         items.add(line);
-                        if(items.size()%10000==0) {
+                        if (items.size() % 10000 == 0) {
                             //add completable task for each of 10000 rows
                             futures.add(CompletableFuture.supplyAsync(yearCountSupplier(new ArrayList<>(items), new HashMap<>())));
                             items.clear();
                         }
                     });
-            if(items.size()>0) {
+            if (items.size() > 0) {
                 //add completable task for remaining rows
                 futures.add(CompletableFuture.supplyAsync(yearCountSupplier(items, new HashMap<>())));
             }
             return CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()]))
-                    .thenApply($->{
+                    .thenApply($ -> {
                         //join all task to collect result after all tasks completed
-                        return futures.stream().map(ftr->ftr.join()).collect(Collectors.toList());
+                        return futures.stream().map(ftr -> ftr.join()).collect(Collectors.toList());
                     })
-                    .thenApply(maps->{
+                    .thenApply(maps -> {
                         Map<String, Integer> yearCountMap = new HashMap<>();
-                        maps.forEach(map->{
+                        maps.forEach(map -> {
                             //merge the result of all the tasks
-                            map.forEach((key, val)->{
-                                if(yearCountMap.containsKey(key)) {
-                                    yearCountMap.put(key, yearCountMap.get(key)+val);
-                                }else
+                            map.forEach((key, val) -> {
+                                if (yearCountMap.containsKey(key)) {
+                                    yearCountMap.put(key, yearCountMap.get(key) + val);
+                                } else
                                     yearCountMap.put(key, val);
                             });
                         });
@@ -57,26 +60,23 @@ public class AsyncFrequencyBuilder {
     }
 
     //Supplier method to count the year in given rows
-    public Supplier<Map<String, Integer>> yearCountSupplier(List<String> items, Map<String, Integer> map){
-        return ()->{
-            items.forEach((line)->{
-                yearCount(line,map);
+    public Supplier<Map<String, Integer>> yearCountSupplier(List<String> items, Map<String, Integer> map) {
+        FrequencyMap fm = new FrequencyMap();
+        return () -> {
+            items.forEach((line) -> {
+                yearCount(line, map, fm);
             });
             return map;
         };
     }
-    public void yearCount(String line, Map<String, Integer> countMap){
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < line.length(); i++) {
-            Character c = line.charAt(i);
-            if (Character.isLetter(c)) {
-                sb.append(c);
-            } else {
-                if(sb.toString().length() > 0)
-                    countMap.put(sb.toString(), countMap.getOrDefault(sb.toString(), 0) + 1);
-                countMap.put(String.valueOf(c), countMap.getOrDefault(String.valueOf(c), 0) + 1);
-                sb.setLength(0);
-            }
+
+    public void yearCount(String line, Map<String, Integer> countMap, FrequencyMap fm) {
+        fm.buildFrequencyTable(new ByteArrayInputStream(line.getBytes()));
+//        countMap = fm.getKeyValues().stream()
+//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        for(Map.Entry<String, Integer> entry : fm.getKeyValues())
+        {
+            countMap.put(entry.getKey(), countMap.getOrDefault(entry.getKey(), 0) + entry.getValue());
         }
     }
 }

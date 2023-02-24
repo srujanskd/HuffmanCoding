@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Logger;
 
 public class TopNHelper {
@@ -60,8 +64,20 @@ public class TopNHelper {
             HashMap<String, Integer> hm = (HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(this.frequencyMap, percentage);
             tempFreq.setFrequencyMap(hm);
             HuffmanTree huffmanTree = HuffmanTree.buildHuffmanTree(tempFreq);
-            double headerLength = calculateHeaderLength(tempFreq);
+            ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+            Future<Double> head = threadPoolExecutor.submit(() -> calculateHeaderLength(tempFreq));
+            double headerLength = 0;
             double bodyLength = calculateBodyLength(tempFreq, huffmanTree);
+            try {
+                headerLength = head.get();
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+            threadPoolExecutor.shutdown();
+
             double totalLen = headerLength + bodyLength;
             if(probability(currentState.get(0), totalLen, temperatureArray.get(i)) > Math.random()) {
                 currentState.set(0, totalLen);
@@ -78,7 +94,7 @@ public class TopNHelper {
     private double calculateBodyLength(FrequencyMap tempFreq, HuffmanTree huffmanTree) {
         long len = 0;
         for(Map.Entry<String, Integer> i : tempFreq.getKeyValues()) {
-            len += (i.getValue() * (huffmanTree.getCode(i.getKey())).size());
+            len += ((long)i.getValue() * (huffmanTree.getCode(i.getKey())).size());
         }
         return len / 8.0;
     }

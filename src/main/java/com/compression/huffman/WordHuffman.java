@@ -35,7 +35,7 @@ public class WordHuffman {
             long outLen = out.length();
             LOGGER.log(Level.INFO, "Input file size : {0} Bytes", inLen);
             LOGGER.log(Level.INFO, "Compressed file size : {0} Bytes", outLen);
-            LOGGER.log(Level.INFO, "Compression Percentage : {0} %" + (100 - ((double)outLen / inLen * 100)));
+            LOGGER.log(Level.INFO, "Compression Percentage : {0} %", (100 - ((double)outLen / inLen * 100)));
 
         }
         else if(args[0].equals("-decompress")) {
@@ -49,7 +49,7 @@ public class WordHuffman {
         }
 
         Long endTime = System.currentTimeMillis();
-        LOGGER.log(Level.INFO, "Execution time : {0} ms", (starTime - endTime));
+        LOGGER.log(Level.INFO, "Execution time : {0} ms", (endTime - starTime));
         LOGGER.log(Level.INFO, "Total memory Used : {0} MB" ,((runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)));
 
     }

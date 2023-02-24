@@ -18,6 +18,7 @@ public class HuffmanCompress implements Compressable<File> {
 
     @Override
     public void compressFile(File inputFile, File outputFile) {
+//        LOGGER.setLevel(Level.FINER);
         Objects.requireNonNull(inputFile);
         Objects.requireNonNull(outputFile);
 
@@ -35,6 +36,7 @@ public class HuffmanCompress implements Compressable<File> {
 //            frequencyMap.setFrequencyMap(hm);
             InputStream freqInput = new FileInputStream(inputFile);
             frequencyMap.buildFrequencyTable(freqInput);
+            System.out.println(frequencyMap.size());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -44,10 +46,10 @@ public class HuffmanCompress implements Compressable<File> {
         double[] perAndHeadLen = getBestPercentAndHeaderLenUsingThreads(frequencyMap);
 
         double percent = perAndHeadLen[0];
-//
+
         LOGGER.log(Level.INFO, "Header Length {0} KB",(perAndHeadLen[1]) / 1000.0);
         LOGGER.log(Level.INFO, "Top N percent : {0} %", percent);
-
+//
         TopNFrequency topNFrequency = new TopNFrequency();
         frequencyMap.setFrequencyMap((HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, 20.0));
         frequencyMap.increment("256");
@@ -71,9 +73,9 @@ public class HuffmanCompress implements Compressable<File> {
 
     double[] getBestPercentAndHeaderLenUsingThreads(FrequencyMap frequencyMap) {
 
-        Temperature temp = new Temperature(10000, 0.2, 4);
+        Temperature temp = new Temperature(1000, 0.3, 4);
 
-        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
 
         int n = temp.splitArray.size();
         ArrayList<Future<List<Double>>> bestFreq = new ArrayList<>();
@@ -98,12 +100,12 @@ public class HuffmanCompress implements Compressable<File> {
             }
             ans.add(d);
         }
-
+        executor.shutdown();
         Collections.sort(ans, Comparator.comparing(d -> d.get(0)));
         double[] bestPer = new double[2];
         bestPer[0] = ans.get(0).get(1);
         bestPer[1] = ans.get(0).get(2);
-        executor.shutdown();
+
         return bestPer;
     }
 
