@@ -2,7 +2,9 @@ package com.compression.huffman.wordhuffman.compress;
 
 import com.compression.Compressable;
 import com.compression.file.FileWrite;
+import com.compression.huffman.utils.FileCompare;
 import com.compression.huffman.utils.FrequencyMap;
+import com.compression.huffman.utils.iHuffmanTree;
 import com.compression.huffman.wordhuffman.utils.HuffmanTree;
 import com.compression.huffman.wordhuffman.utils.TopNFrequency;
 import com.compression.huffman.wordhuffman.utils.TopNHelper;
@@ -18,7 +20,7 @@ public class HuffmanCompress implements Compressable<File> {
 
     @Override
     public void compressFile(File inputFile, File outputFile) {
-//        LOGGER.setLevel(Level.FINER);
+
         Objects.requireNonNull(inputFile);
         Objects.requireNonNull(outputFile);
 
@@ -27,51 +29,48 @@ public class HuffmanCompress implements Compressable<File> {
 
         if (outputFile.exists())
             throw new IllegalArgumentException("Output file already exists, Please provide a new file");
-
+        String digest = (new FileCompare()).generateChecksum(inputFile);
+        LOGGER.log(Level.INFO, "Message Digest = {0}", digest);
         FrequencyMap frequencyMap = new FrequencyMap();
-//        AsyncFrequencyBuilder aFB = new AsyncFrequencyBuilder();
 
         try {
-//            HashMap<String, Integer> hm = (HashMap<String, Integer>) aFB.asyncFrequencyBuild(inputFile.getPath());
-//            frequencyMap.setFrequencyMap(hm);
             InputStream freqInput = new FileInputStream(inputFile);
             frequencyMap.buildFrequencyTable(freqInput);
-            System.out.println(frequencyMap.size());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-//        TopNHelper tn = new TopNHelper(frequencyMap);
+        TopNHelper tn = new TopNHelper(frequencyMap);
         //perAndHeadLen will have [percentage, header length]
 //        double[] perAndHeadLen1 = tn.bestTopNFrequency(0, 100);
-        double[] perAndHeadLen = getBestPercentAndHeaderLenUsingThreads(frequencyMap);
+        TopNFrequency topNFrequency = new TopNFrequency();
+        ArrayList<AbstractMap.SimpleImmutableEntry<String, Integer>> sortMap = (ArrayList<AbstractMap.SimpleImmutableEntry<String, Integer>>) topNFrequency.getSortedMap(frequencyMap);
 
+        double[] perAndHeadLen = getBestPercentAndHeaderLenUsingThreads(frequencyMap, sortMap);
         double percent = perAndHeadLen[0];
 //
         LOGGER.log(Level.INFO, "Header Length {0} KB",(perAndHeadLen[1]) / 1000.0);
         LOGGER.log(Level.INFO, "Top N percent : {0} %", percent);
 
-        TopNFrequency topNFrequency = new TopNFrequency();
-        frequencyMap.setFrequencyMap((HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, 20.0));
+        frequencyMap.setFrequencyMap((HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, sortMap, percent));
         frequencyMap.increment("~~");
 
-        HuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyMap);
+        iHuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyMap);
 
         try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile))) {
             try (FileWrite out = new FileWrite(new BufferedOutputStream(new FileOutputStream(outputFile)))) {
-                writeKey(frequencyMap, out);
-                compress(huffTree, in, out);
+                writeKey(frequencyMap, digest, out);
+                compress((HuffmanTree) huffTree, in, out);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         
-//        LOGGER.log(Level.INFO, "Average Huffman Bits : " + huffTree.averageHuffmanBits(frequencyMap));
-
+        LOGGER.log(Level.INFO, "Average Huffman Bits : " + ((HuffmanTree) huffTree).averageHuffmanBits(frequencyMap));
 
 
     }
 
-    double[] getBestPercentAndHeaderLenUsingThreads(FrequencyMap frequencyMap) {
+    double[] getBestPercentAndHeaderLenUsingThreads(FrequencyMap frequencyMap, ArrayList<?> sortedMap) {
 
         Temperature temp = new Temperature(1000, 0.2, 5);
 
@@ -83,7 +82,7 @@ public class HuffmanCompress implements Compressable<File> {
         for (int i = 0; i < n; i++) {
             int finalI = i;
             bestFreq.add(executor.submit(() ->
-                    (new TopNHelper(frequencyMap)).bestTopNFrequency(temp.splitArray.get(finalI)))
+                    (new TopNHelper(frequencyMap)).bestTopNFrequency(temp.splitArray.get(finalI), sortedMap))
             );
         }
 
@@ -109,10 +108,11 @@ public class HuffmanCompress implements Compressable<File> {
         return bestPer;
     }
 
-    private void writeKey(FrequencyMap freqTable, FileWrite output) throws IOException {
+    private void writeKey(FrequencyMap freqTable, String digest, FileWrite output) throws IOException {
         Objects.requireNonNull(freqTable);
         Objects.requireNonNull(output);
         output.writeObject(freqTable);
+        output.writeObject(digest);
     }
 
     void compress(HuffmanTree code, InputStream input, FileWrite out) throws IOException {

@@ -16,7 +16,7 @@ public class Temperature {
         splitArray = splitArray(split, temperatureArray);
     }
 
-    private List<List<Double>> splitArray(int split, ArrayList<Double> arr) {
+    public List<List<Double>> splitArray(int split, ArrayList<Double> arr) {
         int len = arr.size();
         int elems = len / split;
         List<List<Double>> ans = new ArrayList<>();

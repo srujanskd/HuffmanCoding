@@ -45,18 +45,9 @@ public class FileRead implements FIleReadable, AutoCloseable{
         return ((c1 << 24) | (c2 << 16) | (c3 << 8) | c4);
     }
 
-    public int readNoEof() throws IOException {
-        int result = read();
-        if (result != -1)
-            return result;
-        else
-            throw new EOFException();
-    }
-
     public Object readObj() throws IOException, ClassNotFoundException {
         objectInputStream = new ObjectInputStream(input);
         return objectInputStream.readObject();
-
     }
 
     @Override

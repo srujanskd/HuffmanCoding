@@ -50,5 +50,20 @@ public class FileReadTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        try {
+            fin.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @Test(expected = RuntimeException.class)
+    public void whenReadObj_thenExpectObj() {
+        buf = new byte[] {(byte) 10.0};
+        fin = new FileRead(new ByteArrayInputStream(buf));
+        try {
+            Assert.assertEquals(10.0 ,fin.readObj());
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

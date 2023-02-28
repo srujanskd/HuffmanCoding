@@ -3,22 +3,19 @@ package com.compression.huffman.wordhuffman.utils;
 import com.compression.huffman.utils.FrequencyMap;
 import org.apache.commons.lang3.SerializationUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.logging.Logger;
 
 public class TopNHelper {
     FrequencyMap frequencyMap;
     public TopNHelper(FrequencyMap frequencyMap) {
-            this.frequencyMap = frequencyMap;
+        Objects.requireNonNull(frequencyMap);
+        this.frequencyMap = frequencyMap;
     }
-     public double[] bestTopNFrequency(double start, double end) {
+     public double[] bestTopNFrequency(double start, double end, ArrayList<?> sortedMap) {
         double[] pocket = new double[3];
         pocket[0] = Integer.MAX_VALUE;
         pocket[1] = 0;
@@ -31,7 +28,7 @@ public class TopNHelper {
         double coolingRate = 0.1;
         while(temp > 1) {
             double percentage = Math.random() * (end - start + 1) + start;
-            HashMap<String, Integer> hm = (HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(this.frequencyMap, percentage);
+            HashMap<String, Integer> hm = (HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(this.frequencyMap, sortedMap, percentage);
             tempFreq.setFrequencyMap(hm);
             HuffmanTree huffmanTree = HuffmanTree.buildHuffmanTree(tempFreq);
             double headerLength = calculateHeaderLength(tempFreq);
@@ -50,18 +47,19 @@ public class TopNHelper {
         return pocket;
     }
 
-    public List<Double> bestTopNFrequency(List<Double> temperatureArray){
+    public List<Double> bestTopNFrequency(List<Double> temperatureArray, ArrayList<?> sortedMap){
+        Objects.requireNonNull(temperatureArray);
         List<Double> pocket = new ArrayList<>();
         pocket.add((double) Integer.MAX_VALUE);
         pocket.add(0.0);
         pocket.add((double) Integer.MAX_VALUE);
-        List<Double> currentState = new ArrayList<>();
+        List<Double> currentState;
         currentState = pocket;
         TopNFrequency topNFrequency = new TopNFrequency();
         FrequencyMap tempFreq = new FrequencyMap();
         for(int i = 0; i < temperatureArray.size(); i++) {
             Double percentage = Math.random() * 100.0;
-            HashMap<String, Integer> hm = (HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(this.frequencyMap, percentage);
+            HashMap<String, Integer> hm = (HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(this.frequencyMap, sortedMap, percentage);
             tempFreq.setFrequencyMap(hm);
             HuffmanTree huffmanTree = HuffmanTree.buildHuffmanTree(tempFreq);
             ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
@@ -71,9 +69,7 @@ public class TopNHelper {
             try {
                 headerLength = head.get();
 
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
             threadPoolExecutor.shutdown();

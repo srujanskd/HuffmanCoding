@@ -2,6 +2,7 @@ package com.compression.huffman.statichuff.compress;
 
 import com.compression.Compressable;
 import com.compression.file.FileWrite;
+import com.compression.huffman.utils.FileCompare;
 import com.compression.huffman.utils.FrequencyTable;
 import com.compression.huffman.utils.HuffmanTree;
 
@@ -25,7 +26,8 @@ public class HuffmanCompress implements Compressable<File> {
 
         if(outputFile.exists())
             throw new IllegalArgumentException("Output file already exists, Please provide a new file");
-
+        FileCompare fileCompare = new FileCompare();
+        String digest = fileCompare.generateChecksum(inputFile);
         FrequencyTable frequencyTable = new FrequencyTable(new int[257]);
         try {
             InputStream freqInput = new FileInputStream(inputFile);
@@ -40,7 +42,7 @@ public class HuffmanCompress implements Compressable<File> {
 
         try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile))) {
             try (FileWrite out = new FileWrite(new BufferedOutputStream(new FileOutputStream(outputFile)))) {
-                writeKey(frequencyTable, out);
+                writeKey(frequencyTable, digest, out);
                 compress(huffTree, in, out);
             }
         }
@@ -52,7 +54,7 @@ public class HuffmanCompress implements Compressable<File> {
     }
 
     // Serializes and writes the Huffman coded tree into the key file
-    private void writeKey(FrequencyTable freqTable, FileWrite output) throws IOException {
+    private void writeKey(FrequencyTable freqTable, String digest, FileWrite output) throws IOException {
         Objects.requireNonNull(freqTable);
         Objects.requireNonNull(output);
 
@@ -60,6 +62,7 @@ public class HuffmanCompress implements Compressable<File> {
             int freq = freqTable.get(i);
             output.write32(freq);
         }
+        output.writeObject(digest);
     }
 
     //Reads the input file and compresses each character and writes to the output file

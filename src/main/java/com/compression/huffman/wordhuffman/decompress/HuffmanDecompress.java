@@ -3,6 +3,7 @@ package com.compression.huffman.wordhuffman.decompress;
 import com.compression.Decompressable;
 import com.compression.file.FileRead;
 import com.compression.huffman.node.HuffmanNode;
+import com.compression.huffman.utils.FileCompare;
 import com.compression.huffman.utils.FrequencyMap;
 import com.compression.huffman.wordhuffman.utils.HuffmanTree;
 
@@ -31,10 +32,11 @@ public class HuffmanDecompress implements Decompressable<File> {
     }
 
     private FrequencyMap readKey(FileRead inp) throws IOException, ClassNotFoundException {
-        return (FrequencyMap) inp.readObj();
+        FrequencyMap fm = (FrequencyMap) inp.readObj();
+        FileCompare.inputDigest = (String) inp.readObj();
+        return fm;
     }
-
-    private void decompress(HuffmanTree code, FileRead input, OutputStream output) throws IOException {
+     void decompress(HuffmanTree code, FileRead input, OutputStream output) throws IOException {
         Objects.requireNonNull(code);
         Objects.requireNonNull(input);
         Objects.requireNonNull(output);

@@ -54,7 +54,7 @@ public class HuffmanTree implements iHuffmanTree<String>{
             HuffmanNode nodeX = priorityQueue.remove();
             HuffmanNode nodeY = priorityQueue.remove();
 
-            HuffmanNode node = new HuffmanNode(min((String) nodeX.getSymbol(), (String) nodeY.getSymbol()),
+            HuffmanNode node = new HuffmanNode(max((String) nodeX.getSymbol(), (String) nodeY.getSymbol()),
                     nodeX.getFrequency() + nodeY.getFrequency(),
                     nodeX, nodeY);
             priorityQueue.add(node);
@@ -102,13 +102,13 @@ public class HuffmanTree implements iHuffmanTree<String>{
             return avg;
     }
 
-    private static String min(String s1, String s2) {
+    private static String max(String s1, String s2) {
         int ans = s1.compareTo(s2);
         if(ans <= 0) {
-            return s1;
+            return s2;
         }
         else {
-            return s2;
+            return s1;
         }
 
     }
