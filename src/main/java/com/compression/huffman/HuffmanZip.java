@@ -1,9 +1,14 @@
 package com.compression.huffman;
 
+import com.compression.Compressable;
+import com.compression.Decompressable;
 import com.compression.huffman.statichuff.compress.HuffmanCompress;
 import com.compression.huffman.statichuff.decompress.HuffmanDecompress;
+import com.compression.huffman.utils.FileCompare;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Main Class for the Application
@@ -12,6 +17,8 @@ import java.io.File;
  *          java HuffmanZip -decompress input_file output_file
  */
 public class HuffmanZip {
+    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
     public static void main(String[] args) {
         Runtime runtime = Runtime.getRuntime();
         Long starTime = System.currentTimeMillis();
@@ -24,26 +31,32 @@ public class HuffmanZip {
         if(args[0].equals("-compress")){
             File inp = new File(args[1]);
             File out = new File((args[2]));
-            HuffmanCompress huffComp = new HuffmanCompress();
+            Compressable huffComp = new HuffmanCompress();
             huffComp.compressFile(inp, out);
             long inLen = inp.length();
             long outLen = out.length();
-            System.out.println("Input file size :" + inLen + "Bytes");
-            System.out.println("Compressed file size :" + outLen + "Bytes");
-            System.out.println("Compression Percentage :" + (100 - ((double)outLen / inLen * 100)) + "%");
+            LOGGER.log(Level.INFO, "Input file size : {0} Bytes", inLen);
+            LOGGER.log(Level.INFO, "Compressed file size : {0} Bytes", outLen);
+            LOGGER.log(Level.INFO, "Compression Percentage : {0} %", (100 - ((double)outLen / inLen * 100)));
 
         }
         else if(args[0].equals("-decompress")) {
             File inp = new File(args[1]);
             File out = new File((args[2]));
-            HuffmanDecompress huffDecomp = new HuffmanDecompress();
+            Decompressable huffDecomp = new HuffmanDecompress();
             huffDecomp.decompressFile(inp, out);
-            System.out.println("Input file size :" + inp.length() + "Bytes");
-            System.out.println("Output file size :" + out.length() + "Bytes");
+            LOGGER.log(Level.INFO, "Input file size : {0} Bytes", inp.length());
+            LOGGER.log(Level.INFO, "Output file size : {0} Bytes", out.length());
+            FileCompare fileCompare = new FileCompare();
+            FileCompare.outputDigest = fileCompare.generateChecksum(out);
+            if(FileCompare.inputDigest.compareTo(FileCompare.outputDigest) == 0)
+                LOGGER.log(Level.INFO, "File is Same");
+            else
+                LOGGER.log(Level.INFO, "File is Not Same");
         }
 
         Long endTime = System.currentTimeMillis();
-        System.out.println("Execution time : " + (endTime - starTime) + "ms");
-        System.out.println("Total memory Used : " + ((runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)) + "MB");
+        LOGGER.log(Level.INFO, "Execution time : {0} ms", (endTime - starTime));
+        LOGGER.log(Level.INFO, "Total memory Used : {0} MB" ,((runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)));
     }
 }

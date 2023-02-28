@@ -1,9 +1,6 @@
 package com.compression.file;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.util.Objects;
 
 /**
@@ -48,18 +45,9 @@ public class FileRead implements FIleReadable, AutoCloseable{
         return ((c1 << 24) | (c2 << 16) | (c3 << 8) | c4);
     }
 
-    public int readNoEof() throws IOException {
-        int result = read();
-        if (result != -1)
-            return result;
-        else
-            throw new EOFException();
-    }
-
     public Object readObj() throws IOException, ClassNotFoundException {
         objectInputStream = new ObjectInputStream(input);
         return objectInputStream.readObject();
-
     }
 
     @Override

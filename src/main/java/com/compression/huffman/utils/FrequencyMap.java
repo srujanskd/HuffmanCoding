@@ -59,7 +59,7 @@ public class FrequencyMap implements iFrequencyTable<String>, Serializable {
                 int b =  inp.read();
                 if(b != -1) {
                     Character c = (char) b;
-                    if (Character.isLetter(c)) {
+                    if (Character.isLetterOrDigit(c)) {
                         sb.append(c);
                     } else {
                         if(sb.toString().length() > 0)

@@ -49,7 +49,6 @@ public class FileWrite implements FileWritable, AutoCloseable{
         objectOutputStream = new ObjectOutputStream(output);
         objectOutputStream.writeObject(obj);
         objectOutputStream.flush();
-
     }
     @Override
     public void close() throws Exception {

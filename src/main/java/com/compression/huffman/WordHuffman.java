@@ -1,5 +1,8 @@
 package com.compression.huffman;
 
+import com.compression.Compressable;
+import com.compression.Decompressable;
+import com.compression.huffman.utils.FileCompare;
 import com.compression.huffman.wordhuffman.compress.HuffmanCompress;
 import com.compression.huffman.wordhuffman.decompress.HuffmanDecompress;
 
@@ -29,27 +32,35 @@ public class WordHuffman {
         if(args[0].equals("-compress")){
             File inp = new File(args[1]);
             File out = new File((args[2]));
-            HuffmanCompress huffComp = new HuffmanCompress();
+            Compressable huffComp = new HuffmanCompress();
             huffComp.compressFile(inp, out);
             long inLen = inp.length();
             long outLen = out.length();
             LOGGER.log(Level.INFO, "Input file size : {0} Bytes", inLen);
             LOGGER.log(Level.INFO, "Compressed file size : {0} Bytes", outLen);
-            LOGGER.log(Level.INFO, "Compression Percentage : {0} %" + (100 - ((double)outLen / inLen * 100)));
-
+            LOGGER.log(Level.INFO, "Compression Percentage : {0} %", (100 - ((double)outLen / inLen * 100)));
         }
         else if(args[0].equals("-decompress")) {
             File inp = new File(args[1]);
             File out = new File((args[2]));
-            HuffmanDecompress huffDecomp = new HuffmanDecompress();
+            Decompressable huffDecomp = new HuffmanDecompress();
             huffDecomp.decompressFile(inp, out);
             LOGGER.log(Level.INFO, "Input file size : {0} Bytes", inp.length());
             LOGGER.log(Level.INFO, "Output file size : {0} Bytes", out.length());
 
+            FileCompare fileCompare = new FileCompare();
+            FileCompare.outputDigest = fileCompare.generateChecksum(out);
+            if(FileCompare.inputDigest.compareTo(FileCompare.outputDigest) == 0){
+                LOGGER.log(Level.INFO, "File is Same");
+            }
+            else {
+                LOGGER.log(Level.INFO, "File is Not Same");
+            }
+
         }
 
         Long endTime = System.currentTimeMillis();
-        LOGGER.log(Level.INFO, "Execution time : {0} ms", (starTime - endTime));
+        LOGGER.log(Level.INFO, "Execution time : {0} ms", (endTime - starTime));
         LOGGER.log(Level.INFO, "Total memory Used : {0} MB" ,((runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)));
 
     }

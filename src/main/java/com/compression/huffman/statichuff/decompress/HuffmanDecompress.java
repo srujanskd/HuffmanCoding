@@ -3,6 +3,7 @@ package com.compression.huffman.statichuff.decompress;
 import com.compression.Decompressable;
 import com.compression.file.FileRead;
 import com.compression.huffman.node.HuffmanNode;
+import com.compression.huffman.utils.FileCompare;
 import com.compression.huffman.utils.FrequencyTable;
 import com.compression.huffman.utils.HuffmanTree;
 
@@ -10,7 +11,6 @@ import java.io.*;
 import java.util.Objects;
 
 public class HuffmanDecompress implements Decompressable<File> {
-
     public void decompressFile(File inputFile, File outputFile) {
 
         Objects.requireNonNull(inputFile);
@@ -32,13 +32,14 @@ public class HuffmanDecompress implements Decompressable<File> {
         }
     }
 
-    private FrequencyTable readKey(FileRead input) throws IOException {
+    private FrequencyTable readKey(FileRead input) throws IOException, ClassNotFoundException {
         Objects.requireNonNull(input);
         FrequencyTable freqTable = new FrequencyTable(new int[257]);
         for(int i = 0; i < freqTable.size(); i++) {
             int freq = input.read32();
             freqTable.set(i, freq);
         }
+        FileCompare.inputDigest = (String) input.readObj();
         return freqTable;
     }
 

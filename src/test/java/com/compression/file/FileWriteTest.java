@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileWriteTest {
     ByteArrayOutputStream byteArrayOutputStream;
@@ -61,6 +63,13 @@ public class FileWriteTest {
         }
         output.close();
         Assert.assertEquals("t", byteArrayOutputStream.toString());
+    }
+    @Test
+    public void whenWriteFile_returnObj() throws Exception {
+        byteArrayOutputStream = new ByteArrayOutputStream(0);
+        output = new FileWrite(byteArrayOutputStream);
+        output.writeObject(new ArrayList(List.of(0)));
+        output.close();
     }
 
 
