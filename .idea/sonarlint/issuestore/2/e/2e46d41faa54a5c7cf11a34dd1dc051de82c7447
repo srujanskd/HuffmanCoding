@@ -1,0 +1,9 @@
+
+‰
+java:S1319"gThe type of "sortMap" should be an interface such as "List" rather than the implementation "ArrayList".(ëë¼ûÿÿÿÿ8¹ƒšé0
+
+java:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(Á‰Ö8¦ô¢é0
+A
+java:S1452"&Remove usage of generic wildcard type.(ëë¼ûÿÿÿÿ
+C
+java:S1452"&Remove usage of generic wildcard type.(Á‰Ö8Íõ“é0

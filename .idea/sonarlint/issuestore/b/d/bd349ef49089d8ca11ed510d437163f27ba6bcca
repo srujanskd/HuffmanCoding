@@ -1,0 +1,16 @@
+
+`	java:S112)"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ
+`	java:S112b"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ
+`	java:S112d"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ
+[
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(‹¯·­
+Q	java:S125"<This block of commented-out lines of code should be removed.(ìõİ†
+Q	java:S125 "<This block of commented-out lines of code should be removed.(²æÔ
+P	java:S125#"<This block of commented-out lines of code should be removed.(ê§Ô
+X	java:S125'"<This block of commented-out lines of code should be removed.(¼Ù‰Ÿ8äğÕé0
+Q	java:S125+"<This block of commented-out lines of code should be removed.(à‘·…
+Q	java:S125E"<This block of commented-out lines of code should be removed.(ğåß¥
+_
+java:S2147c"DCombine this catch with the one at line 97, which has the same body.(åşŒóùÿÿÿÿ
+t
+java:S2142a"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€

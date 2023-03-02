@@ -1,14 +1,19 @@
 package com.compression.huffman.wordhuffman.compress;
 
 import com.compression.Compressable;
+import com.compression.db.Database;
+import com.compression.db.SQLitePlug;
+import com.compression.db.Schema;
 import com.compression.file.FileWrite;
 import com.compression.huffman.utils.FileCompare;
 import com.compression.huffman.utils.FrequencyMap;
 import com.compression.huffman.utils.iHuffmanTree;
+import com.compression.huffman.wordhuffman.models.FrequencyHolder;
 import com.compression.huffman.wordhuffman.utils.HuffmanTree;
 import com.compression.huffman.wordhuffman.utils.TopNFrequency;
 import com.compression.huffman.wordhuffman.utils.TopNHelper;
 
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -17,6 +22,8 @@ import java.util.logging.Logger;
 
 public class HuffmanCompress implements Compressable<File> {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private String connection = "jdbc:sqlite:/home/srujankashyap/Maven_Test/HuffmanCoding/frequency.db";
+
 
     @Override
     public void compressFile(File inputFile, File outputFile) {
@@ -39,20 +46,28 @@ public class HuffmanCompress implements Compressable<File> {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        TopNHelper tn = new TopNHelper(frequencyMap);
-        //perAndHeadLen will have [percentage, header length]
-//        double[] perAndHeadLen1 = tn.bestTopNFrequency(0, 100);
-        TopNFrequency topNFrequency = new TopNFrequency();
-        ArrayList<AbstractMap.SimpleImmutableEntry<String, Integer>> sortMap = (ArrayList<AbstractMap.SimpleImmutableEntry<String, Integer>>) topNFrequency.getSortedMap(frequencyMap);
 
-        double[] perAndHeadLen = getBestPercentAndHeaderLenUsingThreads(frequencyMap, sortMap);
-        double percent = perAndHeadLen[0];
-//
-        LOGGER.log(Level.INFO, "Header Length {0} KB",(perAndHeadLen[1]) / 1000.0);
-        LOGGER.log(Level.INFO, "Top N percent : {0} %", percent);
+        FrequencyMap tempMap = dbChecker(connection, digest);
+        if (tempMap == null) {
+            TopNHelper tn = new TopNHelper(frequencyMap);
+            //perAndHeadLen will have [percentage, header length]
+            //        double[] perAndHeadLen1 = tn.bestTopNFrequency(0, 100);
+            TopNFrequency topNFrequency = new TopNFrequency();
+            ArrayList<AbstractMap.SimpleImmutableEntry<String, Integer>> sortMap = (ArrayList<AbstractMap.SimpleImmutableEntry<String, Integer>>) topNFrequency.getSortedMap(frequencyMap);
 
-        frequencyMap.setFrequencyMap((HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, sortMap, percent));
-        frequencyMap.increment("~~");
+            double[] perAndHeadLen = getBestPercentAndHeaderLenUsingThreads(frequencyMap, sortMap);
+            double percent = perAndHeadLen[0];
+            //
+            LOGGER.log(Level.INFO, "Header Length {0} KB", (perAndHeadLen[1]) / 1000.0);
+            LOGGER.log(Level.INFO, "Top N percent : {0} %", percent);
+
+            frequencyMap.setFrequencyMap((HashMap<String, Integer>) topNFrequency.getTopNFrequencyMap(frequencyMap, sortMap, percent));
+            frequencyMap.increment("~~");
+        }
+        else {
+            frequencyMap = tempMap;
+        }
+
 
         iHuffmanTree huffTree = HuffmanTree.buildHuffmanTree(frequencyMap);
 
@@ -64,10 +79,18 @@ public class HuffmanCompress implements Compressable<File> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         LOGGER.log(Level.INFO, "Average Huffman Bits : " + ((HuffmanTree) huffTree).averageHuffmanBits(frequencyMap));
 
 
+    }
+
+    FrequencyMap dbChecker(String connection, String digest) {
+        Database header = new SQLitePlug(connection);
+        FrequencyHolder frequencyHolder = new FrequencyHolder();
+        header.create(frequencyHolder, Schema.TABLE);
+        FrequencyMap tempMap = (FrequencyMap) header.read(digest);
+        return tempMap;
     }
 
     double[] getBestPercentAndHeaderLenUsingThreads(FrequencyMap frequencyMap, ArrayList<?> sortedMap) {
@@ -111,8 +134,17 @@ public class HuffmanCompress implements Compressable<File> {
     private void writeKey(FrequencyMap freqTable, String digest, FileWrite output) throws IOException {
         Objects.requireNonNull(freqTable);
         Objects.requireNonNull(output);
-        output.writeObject(freqTable);
+//        output.writeObject(freqTable);
+        Database header = new SQLitePlug(connection);
+        FrequencyHolder frequencyHolder = new FrequencyHolder();
+        header.create(frequencyHolder, Schema.TABLE);
+        if (header.read(digest) == null) {
+            frequencyHolder.id = digest;
+            frequencyHolder.frequencyMapObject = freqTable;
+            header.insert(frequencyHolder);
+        }
         output.writeObject(digest);
+
     }
 
     void compress(HuffmanTree code, InputStream input, FileWrite out) throws IOException {

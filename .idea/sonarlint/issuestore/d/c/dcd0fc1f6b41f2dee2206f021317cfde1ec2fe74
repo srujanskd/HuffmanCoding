@@ -1,0 +1,7 @@
+
+…
+java:S1319"cThe type of "arr" should be an interface such as "List" rather than the implementation "ArrayList".(£ËƒÚùÿÿÿÿ8ÊëáŒé0
+l
+java:S1104"VMake splitArray a static final constant or non-public and provide accessors if needed.(–¯Å·
+{
+java:S1845"YRename method "splitArray" to prevent any misunderstanding/clash with field "splitArray".(£ËƒÚùÿÿÿÿ8ûëáŒé0

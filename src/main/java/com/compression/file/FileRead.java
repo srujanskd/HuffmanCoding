@@ -9,7 +9,7 @@ import java.util.Objects;
 public class FileRead implements FIleReadable, AutoCloseable{
     private final InputStream input;
     ObjectInputStream objectInputStream = null;
-    private int curByte;
+    public int curByte;
     private int numBitsRem;
 
     // Constructor

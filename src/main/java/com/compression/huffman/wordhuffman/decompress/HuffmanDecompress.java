@@ -1,6 +1,7 @@
 package com.compression.huffman.wordhuffman.decompress;
 
 import com.compression.Decompressable;
+import com.compression.db.SQLitePlug;
 import com.compression.file.FileRead;
 import com.compression.huffman.node.HuffmanNode;
 import com.compression.huffman.utils.FileCompare;
@@ -32,8 +33,10 @@ public class HuffmanDecompress implements Decompressable<File> {
     }
 
     private FrequencyMap readKey(FileRead inp) throws IOException, ClassNotFoundException {
-        FrequencyMap fm = (FrequencyMap) inp.readObj();
+//        FrequencyMap fm = (FrequencyMap) inp.readObj();
         FileCompare.inputDigest = (String) inp.readObj();
+        SQLitePlug header = new SQLitePlug("jdbc:sqlite:/home/srujankashyap/Maven_Test/HuffmanCoding/frequency.db");
+        FrequencyMap fm = (FrequencyMap) header.read(FileCompare.inputDigest);
         return fm;
     }
      void decompress(HuffmanTree code, FileRead input, OutputStream output) throws IOException {
